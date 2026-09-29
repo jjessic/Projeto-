@@ -89,11 +89,16 @@ INSERT INTO clientes (id_cliente, nome, telefone, cpf, email, endereco, status) 
 -- =========================================================================
 
 inserto into funcionarios (id_uncionario, nome, telefone, cpf, email, endereço, cargo,)
-(1, 'joao pedro', '(11) 94760-6590', '412.385.961-82', 'joao.pedro@nexus.com.br', 'Rua Principal, 100 - São Paulo', 'Back-end'),
-(2, 'jorge lobato', '(11) 98747-6595', '785.412.963-10', 'jorge.lobato@nexus.com.br', 'Av. Central, 200 - São Paulo', 'Back-end'),
-(3, 'Kelvin Soares', '(11)99476-1582', '382.910.458-12', 'kelvinsoares@nexus.com.br', 'Av. Celso Garcia, 1200 - São Paulo', 'Coordenador TI')
-(4, 'Isabelly alves', '(11)987803237,' '123.456.789-09' 'Isabellyalves@nexus.com.br', 'Rua Augusta, 1500 - São Paulo', 'Recursos Humanos' )               
-(5, 'jesisca barbosa', '(11)971141403', '592.947.017-38', 'jessicabaino@nexus.com.br', 'rodolfo pirane, 850 - São paulo',' Deselvolvedora de sistemas');
+(1, 'Joao Pedro', '(11) 94760-6590', '412.385.961-82', 'joao.pedro@nexus.com.br', 'Rua Principal, 100 - São Paulo', 'Back-end');
+(2, 'Jorge Lobato', '(11) 98747-6595', '785.412.963-10', 'jorge.lobato@nexus.com.br', 'Av. Central, 200 - São Paulo', 'Back-end');
+(3, 'Kelvin Soares', '(11)99476-1582', '382.910.458-12', 'kelvinsoares@nexus.com.br', 'Av. Celso Garcia, 1200 - São Paulo', 'Coordenador TI');
+(4, 'Isabelly Alves', '(11)98780-3237,' '123.456.789-09' 'isabellyalves@nexus.com.br', 'Rua Augusta, 1500 - São Paulo', 'Recursos Humanos' );             
+(5, 'Jessica Barbosa', '(11)97114-1403', '592.947.017-38', 'jessicabiano@nexus.com.br', 'rodolfo pirane, 850 - São paulo',' Deselvolvedora de sistemas');
+(6, 'Caua Cordeschi', '(11)94904-2078', '554.787.554-32', 'cordeschi.caua@nexus.com.br', 'Rua Bom Jesus, 654 - São Paulo', 'Suporte Técnico');
+(7, 'Rafael Rodrigues', '(11)99291-6643', '238.299.535-47', 'rafael.rp@nexus.com.br', 'Rua Apiácas, 826 - São Paulo', 'Back-end');
+(8, 'Adriano de Souza', '(11)91328-0747', '153.312.124-41', 'adriano.candido@nexus.com.br', 'Rua Cajuru, 878 - São Paulo', 'Banco de dados');
+(9, 'Allan Sandes', '(11)97522-2318', '765.623.912-66', 'allansandes@nexus.com.br', 'Rua dos Jacintos, 87 - São Paulo', 'Analista de Processos e Documentação');
+(10, 'Guilherme Luz', '(11)97387-2799', '591.196.038-05', 'guilherme.luz@nexus.com.br', 'Rua Paulino Alves Escudeiro, 151', 'Analista de Processos e Documentação')
 
 -- =========================================================================
 

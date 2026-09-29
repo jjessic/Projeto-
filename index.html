@@ -1,479 +1,480 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Nexus Store | Moda Street</title>
-    <meta
-      name="description"
-      content="Nexus Store vende roupas com estilo streetwear e assistente virtual para indicar tamanho e métodos de pagamento."
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@500;700;800&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <header class="topbar">
-      <div class="brand-wrap">
-        <div class="brand-mark">N</div>
-        <div>
-          <p class="brand-kicker">streetwear store</p>
-          <h1>NEXUS</h1>
-        </div>
-      </div>
-      <label class="search-box" aria-label="Buscar produtos">
-        <input id="searchInput" type="search" placeholder="Buscar produtos..." autocomplete="off" />
-        <ul class="search-suggestions" id="searchSuggestions" aria-label="Sugestões de produtos"></ul>
-      </label>
-      <nav class="nav">
-        <a href="#loja">Loja</a>
-        <p>•</p>
-        <a href="#colecao">Coleção</a>
-        <p>•</p>
-        <a href="#pagamentos">Pagamentos</a>
-      </nav>
-      <div class="header-actions">
-        <button type="button" class="theme-toggle" id="themeToggle" aria-label="Alternar tema">☾</button>
-        <button type="button" class="favorites-toggle" id="favoritesToggle" aria-label="Abrir favoritos">
-          <span aria-hidden="true">♡</span>
-          <strong id="favoritesCount">0</strong>
-        </button>
-        <button type="button" class="cart-pill" id="cartToggle" aria-label="Abrir carrinho">
-          <span class="bag-icon" aria-hidden="true"></span>
-          <strong id="cartCount">0</strong>
-        </button>
-      </div>
-    </header>
-
-    <main>
-      <section class="hero" id="loja" aria-label="Novo drop NEXUS">
-        <div class="hero-slides">
-          <article class="hero-slide is-active">
-            <div class="hero-copy"><span class="hero-eyebrow">NEXUS / DROP 01</span><h2>NEW<br />DROP</h2><p>Coleção Inverno 2025 • Estampa Gráfica • Oversized Fit</p><a href="#colecao" class="primary-btn">Compre agora</a></div>
-            <div class="hero-photo"><img src="Iron Mike Tyson.jpg" alt="Moletom gráfico NEXUS" /></div>
-          </article>
-          <article class="hero-slide">
-            <div class="hero-copy"><span class="hero-eyebrow">NEXUS / DROP 02</span><h2>GRAPHIC<br />ENERGY</h2><p>Coleção Inverno 2025 • Algodão Premium • Caimento Solto</p><a href="#colecao" class="primary-btn">Compre agora</a></div>
-            <div class="hero-photo"><img src="Camisa-neymar.jpg.jpg" alt="Camiseta gráfica NEXUS" /></div>
-          </article>
-          <article class="hero-slide">
-            <div class="hero-copy"><span class="hero-eyebrow">NEXUS / DROP 03</span><h2>BUILT<br />TO MOVE</h2><p>Coleção Inverno 2025 • Estrutura Leve • Utility Street</p><a href="#colecao" class="primary-btn">Compre agora</a></div>
-            <div class="hero-photo"><img src="jaqueta-nexus.svg" alt="Jaqueta NEXUS" /></div>
-          </article>
-        </div>
-        <button type="button" class="hero-arrow hero-arrow-prev" id="prevSlide" aria-label="Foto anterior">‹</button>
-        <button type="button" class="hero-arrow hero-arrow-next" id="nextSlide" aria-label="Próxima foto">›</button>
-        <div class="hero-pagination" aria-label="Slide atual"><span id="slideCurrent">01</span><i>/</i><span>03</span></div>
-      </section>
-
-      <section class="promo-strip" aria-label="Promoções da Nexus">
-        <div class="promo-card">
-          <span>Promoção</span>
-          <strong>2 peças por R$ 299</strong>
-        </div>
-        <div class="promo-card destaque">
-          <span>Especial</span>
-          <strong>Frete grátis acima de R$ 250</strong>
-        </div>
-        <div class="promo-card">
-          <span>Cashback</span>
-          <strong>10% no PIX</strong>
-        </div>
-      </section>
-
-      <section id="colecao" class="catalog">
-        <div class="section-heading">
-          <span class="section-label">coleção</span>
-          <h3>Novidades <a href="#colecao">- Ver tudo</a></h3>
-        </div>
-
-        <div class="product-grid">
-          <article class="product-card">
-            <div class="product-image">
-              <img src="Iron Mike Tyson.jpg" alt="Moletom gráfico NEXUS" />
-              <button type="button" class="favorite-btn" data-favorite-product="Graphic Nexus" aria-label="Favoritar Graphic Nexus">♡</button>
-            </div>
-            <div class="product-body">
-              <div class="product-topline">
-                <span>Moletom</span>
-                <strong>R$ 249</strong>
-              </div>
-              <h4>Graphic Nexus</h4>
-              <p>Moletom oversized com grafismo frontal.</p>
-              <button type="button" class="add-cart-btn" data-product="Graphic Nexus" data-price="249">Adicionar ao carrinho</button>
-            </div>
-          </article>
-
-          <article class="product-card">
-            <div class="product-image">
-              <img src="Iron Mike Tyson.jpg" alt="Moletom Mike Tyson" />
-              <button type="button" class="favorite-btn" data-favorite-product="Nexus Logo Tee" aria-label="Favoritar Nexus Logo Tee">♡</button>
-            </div>
-            <div class="product-body">
-              <div class="product-topline">
-                <span>Camiseta</span>
-                <strong>R$ 189</strong>
-              </div>
-              <h4>Nexus Logo Tee</h4>
-              <p>Malha premium com estampa gráfica.</p>
-              <button type="button" class="add-cart-btn" data-product="Nexus Logo Tee" data-price="189">Adicionar ao carrinho</button>
-            </div>
-          </article>
-
-          <article class="product-card">
-            <div class="product-image">
-              <img src="jaqueta-realista.svg" alt="Jaqueta Nexus realista" />
-              <button type="button" class="favorite-btn" data-favorite-product="Cap Nexus" aria-label="Favoritar Cap Nexus">♡</button>
-            </div>
-            <div class="product-body">
-              <div class="product-topline">
-                <span>Boné</span>
-                <strong>R$ 119</strong>
-              </div>
-              <h4>Cap Nexus</h4>
-              <p>Boné de aba curva com identidade NEXUS.</p>
-              <button type="button" class="add-cart-btn" data-product="Cap Nexus" data-price="119">Adicionar ao carrinho</button>
-            </div>
-          </article>
-
-          <article class="product-card">
-            <div class="product-image">
-              <img src="jaqueta-realista.svg" alt="Calça cargo NEXUS" />
-              <button type="button" class="favorite-btn" data-favorite-product="Utility Cargo" aria-label="Favoritar Utility Cargo">♡</button>
-            </div>
-            <div class="product-body">
-              <div class="product-topline">
-                <span>Calça cargo</span>
-                <strong>R$ 329</strong>
-              </div>
-              <h4>Utility Cargo</h4>
-              <p>Volume funcional e construção para o dia inteiro.</p>
-              <button type="button" class="add-cart-btn" data-product="Utility Cargo" data-price="329">Adicionar ao carrinho</button>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <section class="fit-box" id="fit-box">
-        <div class="section-label">fit assistant</div>
-        <div class="calculator-grid">
-          <div class="inputs">
-            <h3>Medida do seu look</h3>
-            <form id="fitForm">
-              <div class="field-row">
-                <label>
-                  <span>Peito (cm)</span>
-                  <input id="busto" type="number" min="50" max="200" value="96" required />
-                </label>
-
-                <label>
-                  <span>Cintura (cm)</span>
-                  <input id="cintura" type="number" min="40" max="180" value="82" required />
-                </label>
-              </div>
-
-              <div class="field-row">
-                <label>
-                  <span>Quadril (cm)</span>
-                  <input id="quadril" type="number" min="50" max="210" value="100" required />
-                </label>
-
-                <label>
-                  <span>Altura (cm)</span>
-                  <input id="altura" type="number" min="120" max="220" value="172" required />
-                </label>
-              </div>
-
-              <div class="field-row">
-                <label>
-                  <span>Estilo</span>
-                  <select id="fitStyle">
-                    <option value="slim">Slim</option>
-                    <option value="regular" selected>Regular</option>
-                    <option value="oversized">Oversized</option>
-                  </select>
-                </label>
-
-                <label>
-                  <span>Peça</span>
-                  <select id="tipoPeca">
-                    <option value="camiseta" selected>Camiseta</option>
-                    <option value="moletom">Moletom</option>
-                    <option value="jaqueta">Jaqueta</option>
-                    <option value="calca">Calça</option>
-                  </select>
-                </label>
-              </div>
-
-              <div class="field-row">
-                <label>
-                  <span>Tamanho</span>
-                  <select id="tamanhoSelect">
-                    <option value="P">P</option>
-                    <option value="M" selected>M</option>
-                    <option value="G">G</option>
-                    <option value="GG">GG</option>
-                  </select>
-                </label>
-              </div>
-
-              <div class="actions">
-                <button type="submit" class="primary-btn">Calcular</button>
-                <button type="button" id="resetBtn" class="secondary-btn light">Resetar</button>
-              </div>
-            </form>
-          </div>
-
-          <div class="result-panel">
-            <div class="mini-card">
-              <span>Vampira</span>
-              <strong id="vampiraMsg">Seu look está pronto para entrar no clima.</strong>
-            </div>
-
-            <div class="result-box">
-              <p class="label-result">Tamanho ideal</p>
-              <h4 id="tamanhoResult">M</h4>
-              <p id="descricaoResult">Caimento confortável com visual urbano e controle.</p>
-            </div>
-
-            <ul id="tipsList" class="tips-list">
-              <li>• Peito com espaço pra respirar.</li>
-              <li>• Cintura sem apertar.</li>
-              <li>• Quadril com caimento natural.</li>
-            </ul>
+  <!DOCTYPE html>
+  <html lang="pt-BR">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Nexus Store | Moda Street</title>
+      <meta
+        name="description"
+        content="Nexus Store vende roupas com estilo streetwear e assistente virtual para indicar tamanho e métodos de pagamento."
+      />
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+      <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@500;700;800&display=swap"
+        rel="stylesheet"
+      />
+      <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+      <header class="topbar">
+        <div class="brand-wrap">
+          <div class="brand-mark">N</div>
+          <div>
+            <p class="brand-kicker">streetwear store</p>
+            <h1>NEXUS</h1>
           </div>
         </div>
-      </section>
-
-      <section id="pagamentos" class="payment-box">
-        <div class="section-heading">
-          <span class="section-label">pagamento</span>
-          <h3>Formas de pagamento</h3>
+        <label class="search-box" aria-label="Buscar produtos">
+          <input id="searchInput" type="search" placeholder="Buscar produtos..." autocomplete="off" />
+          <ul class="search-suggestions" id="searchSuggestions" aria-label="Sugestões de produtos"></ul>
+        </label>
+        <nav class="nav">
+          <a href="#loja">Loja</a>
+          <p>•</p>
+          <a href="#colecao">Coleção</a>
+          <p>•</p>
+          <a href="#pagamentos">Pagamentos</a>
+        </nav>
+        <div class="header-actions">
+          <button type="button" class="theme-toggle" id="themeToggle" aria-label="Alternar tema">☾</button>
+          <button type="button" class="favorites-toggle" id="favoritesToggle" aria-label="Abrir favoritos">
+            <span aria-hidden="true">♡</span>
+            <strong id="favoritesCount">0</strong>
+          </button>
+          <button type="button" class="cart-pill" id="cartToggle" aria-label="Abrir carrinho">
+            <span class="bag-icon" aria-hidden="true"></span>
+            <strong id="cartCount">0</strong>
+          </button>
         </div>
+      </header>
 
-        <div class="payment-grid">
-          <div class="payment-card">
-            <span>PIX</span>
-            <strong>10% OFF</strong>
-            <p>Pagamento imediato com código Pix.</p>
+      <main>
+        <section class="hero" id="loja" aria-label="Novo drop NEXUS">
+          <div class="hero-slides">
+            <article class="hero-slide is-active">
+              <div class="hero-copy"><span class="hero-eyebrow">NEXUS / DROP 01</span><h2>NEW<br />DROP</h2><p>Coleção Inverno 2025 • Estampa Gráfica • Oversized Fit</p><a href="#colecao" class="primary-btn">Compre agora</a></div>
+              <div class="hero-photo"><img src="Iron Mike Tyson.jpg" alt="Moletom gráfico NEXUS" /></div>
+            </article>
+            <article class="hero-slide">
+              <div class="hero-copy"><span class="hero-eyebrow">NEXUS / DROP 02</span><h2>GRAPHIC<br />ENERGY</h2><p>Coleção Inverno 2025 • Algodão Premium • Caimento Solto</p><a href="#colecao" class="primary-btn">Compre agora</a></div>
+              <div class="hero-photo"><img src="Camisa-neymar.jpg.jpg" alt="Camiseta gráfica NEXUS" /></div>
+            </article>
+            <article class="hero-slide">
+              <div class="hero-copy"><span class="hero-eyebrow">NEXUS / DROP 03</span><h2>BUILT<br />TO MOVE</h2><p>Coleção Inverno 2025 • Estrutura Leve • Utility Street</p><a href="#colecao" class="primary-btn">Compre agora</a></div>
+              <div class="hero-photo"><img src="jaqueta-nexus.svg" alt="Jaqueta NEXUS" /></div>
+            </article>
           </div>
-          <div class="payment-card">
-            <span>Cartão</span>
-            <strong>Até 12x</strong>
-            <p>Parcelamento em cartão de crédito.</p>
+          <button type="button" class="hero-arrow hero-arrow-prev" id="prevSlide" aria-label="Foto anterior">‹</button>
+          <button type="button" class="hero-arrow hero-arrow-next" id="nextSlide" aria-label="Próxima foto">›</button>
+          <div class="hero-pagination" aria-label="Slide atual"><span id="slideCurrent">01</span><i>/</i><span>03</span></div>
+        </section>
+
+        <section class="promo-strip" aria-label="Promoções da Nexus">
+          <div class="promo-card">
+            <span>Promoção</span>
+            <strong>2 peças por R$ 299</strong>
           </div>
-          <div class="payment-card">
-            <span>Boleto</span>
-            <strong>À vista</strong>
-            <p>Desconto em boleto bancário.</p>
+          <div class="promo-card destaque">
+            <span>Especial</span>
+            <strong>Frete grátis acima de R$ 250</strong>
           </div>
-          <div class="payment-card">
-            <span>PayPal</span>
-            <strong>Seguro</strong>
-            <p>Pagamento internacional com facilidade.</p>
+          <div class="promo-card">
+            <span>Cashback</span>
+            <strong>10% no PIX</strong>
           </div>
-        </div>
-      </section>
-    </main>
+        </section>
 
-    <aside class="cart-panel" id="cartPanel" aria-label="Carrinho de compras">
-      <div class="cart-header">
-        <div>
-          <span class="section-label">carrinho</span>
-          <h3>Seu pedido</h3>
-        </div>
-        <button type="button" class="icon-btn cart-close" id="closeCartBtn" aria-label="Fechar carrinho">×</button>
-      </div>
+        <section id="colecao" class="catalog">
+          <div class="section-heading">
+            <span class="section-label">coleção</span>
+            <h3>Novidades <a href="#colecao">- Ver tudo</a></h3>
+          </div>
 
-      <div class="cart-list" id="cartList">
-        <p class="cart-empty">Seu carrinho está vazio.</p>
-      </div>
+          <div class="product-grid">
+            <article class="product-card">
+              <div class="product-image">
+                <img src="Iron Mike Tyson.jpg" alt="Moletom gráfico NEXUS" />
+                <button type="button" class="favorite-btn" data-favorite-product="Graphic Nexus" aria-label="Favoritar Graphic Nexus">♡</button>
+              </div>
+              <div class="product-body">
+                <div class="product-topline">
+                  <span>Moletom</span>
+                  <strong>R$ 249</strong>
+                </div>
+                <h4>Graphic Nexus</h4>
+                <p>Moletom oversized com grafismo frontal.</p>
+                <button type="button" class="add-cart-btn" data-product="Graphic Nexus" data-price="249">Adicionar ao carrinho</button>
+              </div>
+            </article>
 
-      <div class="cart-footer">
-        <div class="cart-total-row">
-          <span>Subtotal</span>
-          <strong id="cartTotal">R$ 0,00</strong>
-        </div>
-        <div class="cart-total-row discount-row">
-          <span>Desconto</span>
-          <strong id="cartDiscount">-R$ 0,00</strong>
-        </div>
-        <div class="cart-total-row delivery-row">
-          <span>Entrega</span>
-          <strong id="cartDelivery">R$ 0,00</strong>
-        </div>
-        <div class="cart-total-row final-row">
-          <span>Total</span>
-          <strong id="cartFinalTotal">R$ 0,00</strong>
+            <!-- CAMISA CLICÁVEL DIRETA -->
+            <article class="product-card">
+              <div class="product-image" onclick="window.location.href='#fit-box';" style="cursor: pointer;">
+                <img src="Iron Mike Tyson.jpg" alt="Moletom Mike Tyson" />
+                <button type="button" class="favorite-btn" data-favorite-product="Nexus Logo Tee" aria-label="Favoritar Nexus Logo Tee">♡</button>
+              </div>
+              <div class="product-body">
+                <div class="product-topline">
+                  <span>Camiseta</span>
+                  <strong>R$ 189</strong>
+                </div>
+                <h4 onclick="window.location.href='#fit-box';" style="cursor: pointer; color: inherit;">Nexus Logo Tee</h4>
+                <p>Malha premium com estampa gráfica.</p>
+                <button type="button" class="add-cart-btn" data-product="Nexus Logo Tee" data-price="189">Adicionar ao carrinho</button>
+              </div>
+            </article>
+
+            <article class="product-card">
+              <div class="product-image">
+                <img src="jaqueta-realista.svg" alt="Jaqueta Nexus realista" />
+                <button type="button" class="favorite-btn" data-favorite-product="Cap Nexus" aria-label="Favoritar Cap Nexus">♡</button>
+              </div>
+              <div class="product-body">
+                <div class="product-topline">
+                  <span>Boné</span>
+                  <strong>R$ 119</strong>
+                </div>
+                <h4>Cap Nexus</h4>
+                <p>Boné de aba curva com identidade NEXUS.</p>
+                <button type="button" class="add-cart-btn" data-product="Cap Nexus" data-price="119">Adicionar ao carrinho</button>
+              </div>
+            </article>
+
+            <article class="product-card">
+              <div class="product-image">
+                <img src="jaqueta-realista.svg" alt="Calça cargo NEXUS" />
+                <button type="button" class="favorite-btn" data-favorite-product="Utility Cargo" aria-label="Favoritar Utility Cargo">♡</button>
+              </div>
+              <div class="product-body">
+                <div class="product-topline">
+                  <span>Calça cargo</span>
+                  <strong>R$ 329</strong>
+                </div>
+                <h4>Utility Cargo</h4>
+                <p>Volume funcional e construção para o dia inteiro.</p>
+                <button type="button" class="add-cart-btn" data-product="Utility Cargo" data-price="329">Adicionar ao carrinho</button>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="fit-box" id="fit-box">
+          <div class="section-label">fit assistant</div>
+          <div class="calculator-grid">
+            <div class="inputs">
+              <h3>Medida do seu look (Camisa selecionada)</h3>
+              <form id="fitForm">
+                <div class="field-row">
+                  <label>
+                    <span>busto (cm)</span>
+                    <input id="busto" type="number" min="50" max="200" value="96" required />
+                  </label>
+
+                  <label>
+                    <span>Cintura (cm)</span>
+                    <input id="cintura" type="number" min="40" max="180" value="82" required />
+                  </label>
+                </div>
+
+                <div class="field-row">
+                  <label>
+                    <span>Quadril (cm)</span>
+                    <input id="quadril" type="number" min="50" max="210" value="100" required />
+                  </label>
+
+                  <label>
+                    <span>Altura (cm)</span>
+                    <input id="altura" type="number" min="120" max="220" value="172" required />
+                  </label>
+                </div>
+
+                <div class="field-row">
+                  <label>
+                    <span>Estilo</span>
+                    <select id="fitStyle">
+                      <option value="slim">Slim</option>
+                      <option value="regular" selected>Regular</option>
+                      <option value="oversized">Oversized</option>
+                    </select>
+                  </label>
+
+                  <label>
+                    <span>Peça</span>
+                    <select id="tipoPeca">
+                      <option value="camiseta" selected>Camiseta</option>
+                      <option value="moletom">Moletom</option>
+                      <option value="jaqueta">Jaqueta</option>
+                      <option value="calca">Calça</option>
+                    </select>
+                  </label>
+                </div>
+
+                <div class="field-row"> 
+                  <label>
+                    <span>Tamanho</span>
+                    <select id="tamanhoSelect">
+                      <option value="P">P</option>
+                      <option value="M" selected>M</option>
+                      <option value="G">G</option>
+                      <option value="GG">GG</option>
+                    </select>
+                  </label>
+                </div>
+
+                <div class="actions">
+                  <button type="submit" class="primary-btn">Calcular</button>
+                  <button type="button" id="resetBtn" class="secondary-btn light">Resetar</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="result-panel">
+              <div class="mini-card">
+                <span>X</span>
+                <strong id="vampiraMsg">Camisa Nexus Logo Tee pronta para mexer!</strong>
+              </div>
+
+              <div class="result-box">
+                <p class="label-result">Tamanho ideal</p>
+                <h4 id="tamanhoResult">M</h4>
+                <p id="descricaoResult">Caimento confortável com visual urbano e controle.</p>
+              </div>
+
+              <ul id="tipsList" class="tips-list">
+                <li>• Peito com espaço pra respirar.</li>
+                <li>• Cintura sem apertar.</li>
+                <li>• Quadril com caimento natural.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="pagamentos" class="payment-box">
+          <div class="section-heading">
+            <span class="section-label">pagamento</span>
+            <h3>Formas de pagamento</h3>
+          </div>
+
+          <div class="payment-grid">
+            <div class="payment-card">
+              <span>PIX</span>
+              <strong>10% OFF</strong>
+              <p>Pagamento imediato com código Pix.</p>
+            </div>
+            <div class="payment-card">
+              <span>Cartão</span>
+              <strong>Até 12x</strong>
+              <p>Parcelamento em cartão de crédito.</p>
+            </div>
+            <div class="payment-card">
+              <span>Boleto</span>
+              <strong>À vista</strong>
+              <p>Desconto em boleto bancário.</p>
+            </div>
+            <div class="payment-card">
+              <span>PayPal</span>
+              <strong>Seguro</strong>
+              <p>Pagamento internacional com facilidade.</p>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <aside class="cart-panel" id="cartPanel" aria-label="Carrinho de compras">
+        <div class="cart-header">
+          <div>
+            <span class="section-label">carrinho</span>
+            <h3>Seu pedido</h3>
+          </div>
+          <button type="button" class="icon-btn cart-close" id="closeCartBtn" aria-label="Fechar carrinho">×</button>
         </div>
 
-        <div class="mini-checkout" id="miniCheckout">
-          <span class="mini-checkout-label">Dados de entrega</span>
-          
-          <div class="checkout-fields">
-            <label>
-              <span>Nome Completo</span>
-              <input type="text" id="customerName" placeholder="Seu nome completo" />
-            </label>
-            <label>
-              <span>Rua</span>
-              <input type="text" id="customerStreet" placeholder="Nome da rua" />
-            </label>
-            <div class="row-fields">
+        <div class="cart-list" id="cartList">
+          <p class="cart-empty">Seu carrinho está vazio.</p>
+        </div>
+
+        <div class="cart-footer">
+          <div class="cart-total-row">
+            <span>Subtotal</span>
+            <strong id="cartTotal">R$ 0,00</strong>
+          </div>
+          <div class="cart-total-row discount-row">
+            <span>Desconto</span>
+            <strong id="cartDiscount">-R$ 0,00</strong>
+          </div>
+          <div class="cart-total-row delivery-row">
+            <span>Entrega</span>
+            <strong id="cartDelivery">R$ 0,00</strong>
+          </div>
+          <div class="cart-total-row final-row">
+            <span>Total</span>
+            <strong id="cartFinalTotal">R$ 0,00</strong>
+          </div>
+
+          <div class="mini-checkout" id="miniCheckout">
+            <span class="mini-checkout-label">Dados de entrega</span>
+            
+            <div class="checkout-fields">
               <label>
-                <span>Número</span>
-                <input type="text" id="customerNumber" placeholder="123" />
+                <span>Nome Completo</span>
+                <input type="text" id="customerName" placeholder="Seu nome completo" />
               </label>
               <label>
-                <span>Complemento</span>
-                <input type="text" id="customerComplement" placeholder="Apto, sala..." />
+                <span>Rua</span>
+                <input type="text" id="customerStreet" placeholder="Nome da rua" />
+              </label>
+              <div class="row-fields">
+                <label>
+                  <span>Número</span>
+                  <input type="text" id="customerNumber" placeholder="123" />
+                </label>
+                <label>
+                  <span>Complemento</span>
+                  <input type="text" id="customerComplement" placeholder="Apto, sala..." />
+                </label>
+              </div>
+              <label>
+                <span>CEP</span>
+                <input type="text" id="customerCEP" placeholder="00000-000" />
               </label>
             </div>
-            <label>
-              <span>CEP</span>
-              <input type="text" id="customerCEP" placeholder="00000-000" />
-            </label>
+
+            <span class="mini-checkout-label">Método de Pagamento</span>
+            <div class="payment-option-list">
+              <button type="button" class="payment-option active" data-method="pix">PIX</button>
+              <button type="button" class="payment-option" data-method="cartao">Cartão</button>
+              <button type="button" class="payment-option" data-method="boleto">Boleto</button>
+            </div>
+
+            <div class="installment-box" id="installmentBox" style="display: none;">
+              <label>
+                <span>Parcelamento</span>
+                <select id="installmentSelect">
+                  <option value="1">À vista (sem juros)</option>
+                  <option value="2">2x de R$ 0,00</option>
+                  <option value="3">3x de R$ 0,00</option>
+                  <option value="4">4x de R$ 0,00</option>
+                  <option value="5">5x de R$ 0,00</option>
+                  <option value="6">6x de R$ 0,00</option>
+                  <option value="7">7x de R$ 0,00</option>
+                  <option value="8">8x de R$ 0,00</option>
+                  <option value="9">9x de R$ 0,00</option>
+                  <option value="10">10x de R$ 0,00</option>
+                  <option value="11">11x de R$ 0,00</option>
+                  <option value="12">12x de R$ 0,00</option>
+                </select>
+              </label>
+            </div>
           </div>
 
-          <span class="mini-checkout-label">Método de Pagamento</span>
-          <div class="payment-option-list">
-            <button type="button" class="payment-option active" data-method="pix">PIX</button>
-            <button type="button" class="payment-option" data-method="cartao">Cartão</button>
-            <button type="button" class="payment-option" data-method="boleto">Boleto</button>
-          </div>
+          <button type="button" class="primary-btn cart-checkout">Finalizar Pedido</button>
+        </div>
+      </aside>
 
-          <div class="installment-box" id="installmentBox" style="display: none;">
+      <aside class="cart-panel favorites-panel" id="favoritesPanel" aria-label="Produtos favoritos">
+        <div class="cart-header">
+          <div>
+            <span class="section-label">favoritos</span>
+            <h3>Meus itens</h3>
+          </div>
+          <button type="button" class="icon-btn cart-close" id="closeFavoritesBtn" aria-label="Fechar favoritos">×</button>
+        </div>
+        <div class="favorites-list" id="favoritesList">
+          <p class="cart-empty">Você ainda não favoritou nenhuma peça.</p>
+        </div>
+      </aside>
+
+      <footer class="footer">
+        <div class="footer-line"></div>
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <span class="section-label">NEXUS STORE</span>
+            <h2>Vista sua<br />presença.</h2>
+            <p>Streetwear independente para quem transforma movimento em identidade.</p>
+          </div>
+          <div class="footer-column">
+            <h3>Comprar</h3>
+            <nav class="footer-categories" aria-label="Categorias de produtos">
+              <a href="#colecao" data-category-filter="">Todas as peças</a>
+              <a href="#colecao" data-category-filter="camiseta">Camisetas</a>
+              <a href="#colecao" data-category-filter="moletom">Moletons</a>
+              <a href="#colecao" data-category-filter="boné">Bonés</a>
+              <p><a href="#colecao" data-category-filter="calça">Calças cargo</a></p>
+              <a href="#colecao" data-category-filter="jaqueta">Jaquetas</a>
+            </nav>
+          </div>
+          <div class="footer-column">
+            <h3>Atendimento</h3>
+            <p>Rua Augusta, 1480<br />Consolação, São Paulo - SP<br />CEP 01304-001</p>
+            <p>(11) 99876-2025<br />contato@nexusstore.com.br</p>
+          </div>
+          <div class="footer-column">
+            <h3>Conecte-se</h3>
+            <nav class="footer-socials" aria-label="Redes sociais">
+              <a href="#footer">Instagram</a>
+              <a href="#footer">TikTok</a>
+              <a href="#footer">Pinterest</a>
+            </nav>
+            <p class="footer-service">Frete grátis acima de R$ 250<br />PIX com 10% OFF<br />Cartão em até 12x</p>
+          </div>
+        </div>
+        <div class="footer-bottom" id="footer">
+          <small>© 2026 Nexus Store</small>
+          <span>Feito para durar. Feito para se mover.</span>
+        </div>
+      </footer>
+
+      <div class="assistant-widget closed" id="assistantWidget">
+        <div class="assistant-header">
+          <div class="assistant-avatar" aria-label="Ícone da Vampira Nexus">✦</div>
+          <div class="assistant-title-wrap">
+            <strong>x story</strong>
+            <span>online agora</span>
+          </div>
+          <div class="assistant-actions">
+            <button type="button" class="icon-btn" id="minimizeAssistant" aria-label="Minimizar assistente">−</button>
+            <button type="button" class="icon-btn" id="maximizeAssistant" aria-label="Maximizar assistente">□</button>
+            <button type="button" class="icon-btn" id="closeAssistant" aria-label="Fechar assistente">×</button>
+          </div>
+        </div>
+
+        <div class="assistant-body">
+          <p class="assistant-bubble" id="assistantResponse">
+            Fala comigo, meu parceiro. Vou te ajudar a achar o tamanho certo e o estilo ideal para a sua compra.
+          </p> 
+
+          <div class="assistant-form-box">
             <label>
-              <span>Parcelamento</span>
-              <select id="installmentSelect">
-                <option value="1">À vista (sem juros)</option>
-                <option value="2">2x de R$ 0,00</option>
-                <option value="3">3x de R$ 0,00</option>
-                <option value="4">4x de R$ 0,00</option>
-                <option value="5">5x de R$ 0,00</option>
-                <option value="6">6x de R$ 0,00</option>
-                <option value="7">7x de R$ 0,00</option>
-                <option value="8">8x de R$ 0,00</option>
-                <option value="9">9x de R$ 0,00</option>
-                <option value="10">10x de R$ 0,00</option>
-                <option value="11">11x de R$ 0,00</option>
-                <option value="12">12x de R$ 0,00</option>
+              <span>Seu tamanho da peça</span>
+              <select id="assistantSize">
+                <option value="P">P</option>
+                <option value="M" selected>M</option>
+                <option value="G">G</option>
+                <option value="GG">GG</option>
+                <option value="G2">G2</option>
+                <option value="G3">G3</option>
               </select>
             </label>
+            <button type="button" id="assistantSuggest" class="primary-btn small-btn">Ajudar agora</button>
+            <button type="button" id="addToCartBtn" class="secondary-btn light">Adicionar ao carrinho</button>
           </div>
-        </div>
 
-        <button type="button" class="primary-btn cart-checkout">Finalizar Pedido</button>
-      </div>
-    </aside>
-
-    <aside class="cart-panel favorites-panel" id="favoritesPanel" aria-label="Produtos favoritos">
-      <div class="cart-header">
-        <div>
-          <span class="section-label">favoritos</span>
-          <h3>Meus itens</h3>
-        </div>
-        <button type="button" class="icon-btn cart-close" id="closeFavoritesBtn" aria-label="Fechar favoritos">×</button>
-      </div>
-      <div class="favorites-list" id="favoritesList">
-        <p class="cart-empty">Você ainda não favoritou nenhuma peça.</p>
-      </div>
-    </aside>
-
-    <footer class="footer">
-      <div class="footer-line"></div>
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <span class="section-label">NEXUS STORE</span>
-          <h2>Vista sua<br />presença.</h2>
-          <p>Streetwear independente para quem transforma movimento em identidade.</p>
-        </div>
-        <div class="footer-column">
-          <h3>Comprar</h3>
-          <nav class="footer-categories" aria-label="Categorias de produtos">
-            <a href="#colecao" data-category-filter="">Todas as peças</a>
-            <a href="#colecao" data-category-filter="camiseta">Camisetas</a>
-            <a href="#colecao" data-category-filter="moletom">Moletons</a>
-            <a href="#colecao" data-category-filter="boné">Bonés</a>
-            <a href="#colecao" data-category-filter="calça">Calças cargo</a>
-            <a href="#colecao" data-category-filter="jaqueta">Jaquetas</a>
-          </nav>
-        </div>
-        <div class="footer-column">
-          <h3>Atendimento</h3>
-          <p>Rua Augusta, 1480<br />Consolação, São Paulo - SP<br />CEP 01304-001</p>
-          <p>(11) 99876-2025<br />contato@nexusstore.com.br</p>
-        </div>
-        <div class="footer-column">
-          <h3>Conecte-se</h3>
-          <nav class="footer-socials" aria-label="Redes sociais">
-            <a href="#footer">Instagram</a>
-            <a href="#footer">TikTok</a>
-            <a href="#footer">Pinterest</a>
-          </nav>
-          <p class="footer-service">Frete grátis acima de R$ 250<br />PIX com 10% OFF<br />Cartão em até 12x</p>
-        </div>
-      </div>
-      <div class="footer-bottom" id="footer">
-        <small>© 2026 Nexus Store</small>
-        <span>Feito para durar. Feito para se mover.</span>
-      </div>
-    </footer>
-
-    <div class="assistant-widget closed" id="assistantWidget">
-      <div class="assistant-header">
-        <div class="assistant-avatar" aria-label="Ícone da Vampira Nexus">✦</div>
-        <div class="assistant-title-wrap">
-          <strong>Vampira Nexus</strong>
-          <span>online agora</span>
-        </div>
-        <div class="assistant-actions">
-          <button type="button" class="icon-btn" id="minimizeAssistant" aria-label="Minimizar assistente">−</button>
-          <button type="button" class="icon-btn" id="maximizeAssistant" aria-label="Maximizar assistente">□</button>
-          <button type="button" class="icon-btn" id="closeAssistant" aria-label="Fechar assistente">×</button>
-        </div>
-      </div>
-
-      <div class="assistant-body">
-        <p class="assistant-bubble" id="assistantResponse">
-          Fala comigo, meu parceiro. Vou te ajudar a achar o tamanho certo e o estilo ideal para a sua compra.
-        </p>
-
-        <div class="assistant-form-box">
-          <label>
-            <span>Seu tamanho da peça</span>
-            <select id="assistantSize">
-              <option value="P">P</option>
-              <option value="M" selected>M</option>
-              <option value="G">G</option>
-              <option value="GG">GG</option>
-              <option value="G2">G2</option>
-              <option value="G3">G3</option>
-            </select>
-          </label>
-          <button type="button" id="assistantSuggest" class="primary-btn small-btn">Ajudar agora</button>
-          <button type="button" id="addToCartBtn" class="secondary-btn light">Adicionar ao carrinho</button>
-        </div>
-
-        <div class="assistant-payment">
-          <span>Pagamento:</span>
-          <div class="payment-chips">
-            <i>PIX</i>
-            <i>Cartão</i>
-            <i>Boleto</i>
+          <div class="assistant-payment">
+            <span>Pagamento:</span>
+            <div class="payment-chips">
+              <i>PIX</i>
+              <i>Cartão</i>
+              <i>Boleto</i>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <button type="button" class="assistant-toggle" id="assistantToggle" aria-label="Abrir assistente">
-      N
-    </button>
+      <button type="button" class="assistant-toggle" id="assistantToggle" aria-label="Abrir assistente">
+        N
+      </button>
 
-    <script src="app.js"></script>
-  </body>
-</html>
+      <script src="app.js"></script>
+    </body>
+  </html>
