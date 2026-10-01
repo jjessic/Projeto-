@@ -14,7 +14,7 @@
         href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@500;700;800&display=swap"
         rel="stylesheet"
       />
-      <link rel="stylesheet" href="style.css" />
+      <link rel="stylesheet" href="style.css?v=9" />
     </head>
     <body>
       <header class="topbar">
@@ -27,14 +27,22 @@
         </div>
         <label class="search-box" aria-label="Buscar produtos">
           <input id="searchInput" type="search" placeholder="Buscar produtos..." autocomplete="off" />
-          <ul class="search-suggestions" id="searchSuggestions" aria-label="Sugestões de produtos"></ul>
+          <ul class="search-suggestions" id="searchSuggestions" aria-label="Sugestões de produtos" hidden></ul>
         </label>
         <nav class="nav">
-          <a href="#loja">Loja</a>
-          <p>•</p>
-          <a href="#colecao">Coleção</a>
-          <p>•</p>
-          <a href="#pagamentos">Pagamentos</a>
+          <a href="#loja">LOJA</a>
+          <a href="#colecao">COLEÇÃO</a>
+          <a href="#pagamentos">PAGAMENTOS</a>
+          <div class="category-menu">
+            <button type="button" id="categoriesToggle" aria-expanded="false" aria-controls="categoryMenu">CATEGORIAS</button>
+            <div class="category-menu-list" id="categoryMenu" hidden>
+              <a href="categoria.html?categoria=camiseta">Camisetas</a>
+              <a href="categoria.html?categoria=moletom">Moletons e blusas</a>
+              <a href="categoria.html?categoria=jaqueta">Jaquetas</a>
+              <a href="categoria.html?categoria=calca">Calças</a>
+              <a href="categoria.html?categoria=bone">Bonés</a>
+            </div>
+          </div>
         </nav>
         <div class="header-actions">
           <button type="button" class="theme-toggle" id="themeToggle" aria-label="Alternar tema">☾</button>
@@ -77,7 +85,7 @@
           </div>
           <div class="promo-card destaque">
             <span>Especial</span>
-            <strong>Frete grátis acima de R$ 250</strong>
+            <strong>Frete grátis a partir de R$ 300</strong>
           </div>
           <div class="promo-card">
             <span>Cashback</span>
@@ -92,7 +100,7 @@
           </div>
 
           <div class="product-grid">
-            <article class="product-card">
+            <article class="product-card" data-product-id="graphic-nexus">
               <div class="product-image">
                 <img src="Iron Mike Tyson.jpg" alt="Moletom gráfico NEXUS" />
                 <button type="button" class="favorite-btn" data-favorite-product="Graphic Nexus" aria-label="Favoritar Graphic Nexus">♡</button>
@@ -109,9 +117,9 @@
             </article>
 
             <!-- CAMISA CLICÁVEL DIRETA -->
-            <article class="product-card">
-              <div class="product-image" onclick="window.location.href='#fit-box';" style="cursor: pointer;">
-                <img src="Iron Mike Tyson.jpg" alt="Moletom Mike Tyson" />
+            <article class="product-card" data-product-id="nexus-logo-tee">
+              <div class="product-image">
+                <img src="Camisa-neymar.jpg.jpg" alt="Camiseta Nexus Logo Tee" />
                 <button type="button" class="favorite-btn" data-favorite-product="Nexus Logo Tee" aria-label="Favoritar Nexus Logo Tee">♡</button>
               </div>
               <div class="product-body">
@@ -119,13 +127,13 @@
                   <span>Camiseta</span>
                   <strong>R$ 189</strong>
                 </div>
-                <h4 onclick="window.location.href='#fit-box';" style="cursor: pointer; color: inherit;">Nexus Logo Tee</h4>
+                <h4>Nexus Logo Tee</h4>
                 <p>Malha premium com estampa gráfica.</p>
                 <button type="button" class="add-cart-btn" data-product="Nexus Logo Tee" data-price="189">Adicionar ao carrinho</button>
               </div>
             </article>
 
-            <article class="product-card">
+            <article class="product-card" data-product-id="cap-nexus">
               <div class="product-image">
                 <img src="jaqueta-realista.svg" alt="Jaqueta Nexus realista" />
                 <button type="button" class="favorite-btn" data-favorite-product="Cap Nexus" aria-label="Favoritar Cap Nexus">♡</button>
@@ -141,7 +149,7 @@
               </div>
             </article>
 
-            <article class="product-card">
+            <article class="product-card" data-product-id="utility-cargo">
               <div class="product-image">
                 <img src="jaqueta-realista.svg" alt="Calça cargo NEXUS" />
                 <button type="button" class="favorite-btn" data-favorite-product="Utility Cargo" aria-label="Favoritar Utility Cargo">♡</button>
@@ -163,62 +171,69 @@
           <div class="section-label">fit assistant</div>
           <div class="calculator-grid">
             <div class="inputs">
-              <h3>Medida do seu look (Camisa selecionada)</h3>
+              <h3>Encontre seu tamanho</h3>
               <form id="fitForm">
                 <div class="field-row">
                   <label>
-                    <span>busto (cm)</span>
-                    <input id="busto" type="number" min="50" max="200" value="96" required />
+                    <span>Peça</span>
+                    <select id="tipoPeca">
+                      <option value="camiseta" selected>Camiseta</option>
+                      <option value="blusa">Blusa</option>
+                      <option value="moletom">Moletom</option>
+                      <option value="jaqueta">Jaqueta</option>
+                      <option value="calca">Calça</option>
+                      <option value="bone">Boné</option>
+                    </select>
                   </label>
+                  <label>
+                    <span>Caimento</span>
+                    <select id="fitStyle">
+                      <option value="slim">Ajustado</option>
+                      <option value="regular" selected>Regular</option>
+                      <option value="oversized">Oversized</option>
+                    </select>
+                  </label>
+                </div>
 
+                <p class="fit-measurement-hint" id="fitMeasurementHint">Para camiseta, informe o busto. As outras medidas são opcionais.</p>
+
+                <div class="field-row">
+                  <label>
+                    <span>Peso (kg)</span>
+                    <input id="peso" type="number" min="25" max="300" placeholder="Ex.: 72" />
+                  </label>
+                  <label>
+                    <span>Altura (cm)</span>
+                    <input id="altura" type="number" min="100" max="230" placeholder="Ex.: 172" />
+                  </label>
+                </div>
+
+                <div class="field-row">
+                  <label>
+                    <span>Busto / peito (cm)</span>
+                    <input id="busto" type="number" min="50" max="200" placeholder="Ex.: 96" />
+                  </label>
                   <label>
                     <span>Cintura (cm)</span>
-                    <input id="cintura" type="number" min="40" max="180" value="82" required />
+                    <input id="cintura" type="number" min="40" max="180" placeholder="Ex.: 82" />
                   </label>
                 </div>
 
                 <div class="field-row">
                   <label>
                     <span>Quadril (cm)</span>
-                    <input id="quadril" type="number" min="50" max="210" value="100" required />
+                    <input id="quadril" type="number" min="50" max="210" placeholder="Opcional" />
                   </label>
-
                   <label>
-                    <span>Altura (cm)</span>
-                    <input id="altura" type="number" min="120" max="220" value="172" required />
+                    <span>Ombro a ombro (cm)</span>
+                    <input id="ombro" type="number" min="25" max="75" placeholder="Opcional" />
                   </label>
                 </div>
 
                 <div class="field-row">
                   <label>
-                    <span>Estilo</span>
-                    <select id="fitStyle">
-                      <option value="slim">Slim</option>
-                      <option value="regular" selected>Regular</option>
-                      <option value="oversized">Oversized</option>
-                    </select>
-                  </label>
-
-                  <label>
-                    <span>Peça</span>
-                    <select id="tipoPeca">
-                      <option value="camiseta" selected>Camiseta</option>
-                      <option value="moletom">Moletom</option>
-                      <option value="jaqueta">Jaqueta</option>
-                      <option value="calca">Calça</option>
-                    </select>
-                  </label>
-                </div>
-
-                <div class="field-row"> 
-                  <label>
-                    <span>Tamanho</span>
-                    <select id="tamanhoSelect">
-                      <option value="P">P</option>
-                      <option value="M" selected>M</option>
-                      <option value="G">G</option>
-                      <option value="GG">GG</option>
-                    </select>
+                    <span>Circunferência da cabeça (cm)</span>
+                    <input id="cabeca" type="number" min="45" max="70" placeholder="Para boné" />
                   </label>
                 </div>
 
@@ -231,20 +246,20 @@
 
             <div class="result-panel">
               <div class="mini-card">
-                <span>X</span>
-                <strong id="vampiraMsg">Camisa Nexus Logo Tee pronta para mexer!</strong>
+                <span>N</span>
+                <strong id="vampiraMsg">Informe o busto para encontrar seu tamanho de camiseta.</strong>
               </div>
 
               <div class="result-box">
-                <p class="label-result">Tamanho ideal</p>
-                <h4 id="tamanhoResult">M</h4>
-                <p id="descricaoResult">Caimento confortável com visual urbano e controle.</p>
+                <p class="label-result">Tamanho recomendado</p>
+                <h4 id="tamanhoResult">—</h4>
+                <p id="descricaoResult">Preencha as medidas e selecione “Calcular” para ver a sugestão.</p>
               </div>
 
               <ul id="tipsList" class="tips-list">
-                <li>• Peito com espaço pra respirar.</li>
-                <li>• Cintura sem apertar.</li>
-                <li>• Quadril com caimento natural.</li>
+                <li>• Selecione a peça que quer comprar.</li>
+                <li>• Preencha a medida principal indicada.</li>
+                <li>• Adicione outras medidas para refinar.</li>
               </ul>
             </div>
           </div>
@@ -407,7 +422,7 @@
           <div class="footer-column">
             <h3>Atendimento</h3>
             <p>Rua Augusta, 1480<br />Consolação, São Paulo - SP<br />CEP 01304-001</p>
-            <p>(11) 99876-2025<br />contato@nexusstore.com.br</p>
+            <p>Telefone: (11) 3456-7890<br />WhatsApp: (11) 99876-2025<br />contato@nexusstore.com.br</p>
           </div>
           <div class="footer-column">
             <h3>Conecte-se</h3>
@@ -416,7 +431,7 @@
               <a href="#footer">TikTok</a>
               <a href="#footer">Pinterest</a>
             </nav>
-            <p class="footer-service">Frete grátis acima de R$ 250<br />PIX com 10% OFF<br />Cartão em até 12x</p>
+            <p class="footer-service">Frete grátis a partir de R$ 300<br />PIX com 10% OFF<br />Cartão em até 12x</p>
           </div>
         </div>
         <div class="footer-bottom" id="footer">
@@ -429,7 +444,7 @@
         <div class="assistant-header">
           <div class="assistant-avatar" aria-label="Ícone da Vampira Nexus">✦</div>
           <div class="assistant-title-wrap">
-            <strong>x story</strong>
+            <strong>X Store</strong>
             <span>online agora</span>
           </div>
           <div class="assistant-actions">
@@ -441,33 +456,49 @@
 
         <div class="assistant-body">
           <p class="assistant-bubble" id="assistantResponse">
-            Fala comigo, meu parceiro. Vou te ajudar a achar o tamanho certo e o estilo ideal para a sua compra.
-          </p> 
+            Olá! Eu sou o X Store. Posso ajudar com informações sobre pedidos, entrega, pagamentos e trocas. O que você gostaria de saber?
+          </p>
+          <p class="assistant-selected-question" id="assistantSelectedQuestion" hidden></p>
 
-          <div class="assistant-form-box">
-            <label>
-              <span>Seu tamanho da peça</span>
-              <select id="assistantSize">
-                <option value="P">P</option>
-                <option value="M" selected>M</option>
-                <option value="G">G</option>
-                <option value="GG">GG</option>
-                <option value="G2">G2</option>
-                <option value="G3">G3</option>
-              </select>
-            </label>
-            <button type="button" id="assistantSuggest" class="primary-btn small-btn">Ajudar agora</button>
-            <button type="button" id="addToCartBtn" class="secondary-btn light">Adicionar ao carrinho</button>
-          </div>
-
-          <div class="assistant-payment">
-            <span>Pagamento:</span>
-            <div class="payment-chips">
-              <i>PIX</i>
-              <i>Cartão</i>
-              <i>Boleto</i>
+          <section class="assistant-faq" aria-label="Dúvidas frequentes">
+            <span class="assistant-section-label" id="assistantQuickLabel">COMO POSSO AJUDAR?</span>
+            <div class="assistant-quick-replies" id="assistantQuickReplies">
+              <button type="button" data-faq="size">Como sei meu tamanho de peça?</button>
+              <button type="button" data-faq="delivery">Entrega em quantos dias úteis?</button>
+              <button type="button" data-faq="payments">Quais são as formas de pagamento?</button>
+              <button type="button" data-faq="cancel">Como faço para cancelar um pedido?</button>
+              <button type="button" data-faq="exchange">Como funcionam trocas e devoluções?</button>
+              <button type="button" data-faq="tracking">Como acompanho meu pedido?</button>
+              <button type="button" data-faq="contact">Como posso entrar em contato com vocês?</button>
             </div>
-          </div>
+            <div class="assistant-followup" id="assistantFollowup" hidden>
+              <span class="assistant-section-label" id="assistantFollowupPrompt">Escolha uma situação para ver a orientação:</span>
+              <div class="assistant-quick-replies" id="assistantFollowupOptions"></div>
+            </div>
+            <div class="assistant-feedback" id="assistantFeedback" hidden>
+              <span class="assistant-section-label">Essa resposta resolveu?</span>
+              <div class="assistant-feedback-actions">
+                <button type="button" data-feedback="yes">Sim, valeu!</button>
+                <button type="button" data-feedback="no">Ainda preciso de ajuda</button>
+              </div>
+            </div>
+            <div class="assistant-contact" id="assistantContact" hidden>
+              <span class="assistant-section-label">CANAIS DE ATENDIMENTO</span>
+              <a href="https://wa.me/5511998762025" target="_blank" rel="noopener noreferrer">WhatsApp · (11) 99876-2025</a>
+              <a href="tel:+551134567890">Telefone · (11) 3456-7890</a>
+              <a href="mailto:contato@nexusstore.com.br">E-mail · contato@nexusstore.com.br</a>
+              <div class="assistant-contact-detail">
+                <strong>Endereço</strong>
+                <p>Rua Augusta, 1480, Consolação, São Paulo - SP, CEP 01304-001</p>
+              </div>
+              <div class="assistant-contact-detail">
+                <strong>Horários</strong>
+                <p>Atendimento das 10h às 22h. Se pretende visitar o endereço, confirme antes se há atendimento presencial.</p>
+              </div>
+            </div>
+            <button type="button" class="assistant-restart" id="assistantRestart" hidden>Voltar às dúvidas</button>
+          </section>
+
         </div>
       </div>
 
@@ -475,6 +506,7 @@
         N
       </button>
 
-      <script src="app.js"></script>
+      <script src="products.js?v=3"></script>
+      <script src="app.js?v=10"></script>
     </body>
   </html>

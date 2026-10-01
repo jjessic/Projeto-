@@ -14,7 +14,66 @@
       href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@500;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css?v=3" />
+    <link rel="stylesheet" href="product-detail.css" />
   </head>
-  <body>
+  <body class="product-page">
+    <header class="topbar detail-topbar">
+      <a class="brand-wrap detail-brand" href="index.html" aria-label="Nexus Store, inicio">
+        <span class="brand-mark">N</span>
+        <span><span class="brand-kicker">streetwear store</span><strong>NEXUS</strong></span>
+      </a>
+      <a class="detail-back-link" href="index.html#colecao">← Voltar para a loja</a>
+      <a class="detail-cart-link" href="index.html?abrir-carrinho=1#colecao" aria-label="Abrir carrinho">Sacola <span class="bag-icon" aria-hidden="true"></span></a>
+    </header>
+
+    <main class="detail-main">
+      <nav class="detail-breadcrumb" aria-label="Navegação estrutural">
+        <a href="index.html">Início</a><span>/</span><a href="index.html#colecao">Coleção</a><span>/</span><strong id="detailCategory"></strong>
+      </nav>
+
+      <section class="product-detail" aria-labelledby="detailName">
+        <div class="detail-gallery-column" id="detailGallery"></div>
+        <div class="detail-info">
+          <span class="detail-eyebrow">NEXUS / DROP 01</span>
+          <h1 id="detailName"></h1>
+          <div class="detail-rating"><span aria-hidden="true">★★★★★</span><a href="#avaliacoes">Ver avaliações</a></div>
+          <strong class="detail-price" id="detailPrice"></strong>
+          <p class="detail-description" id="detailDescription"></p>
+          <div class="detail-attributes"><span>Modelagem <strong id="detailFit"></strong></span><span>Composição <strong id="detailMaterial"></strong></span></div>
+
+          <fieldset class="size-picker">
+            <legend>Escolha o tamanho <a href="#medidas">Consultar medidas</a></legend>
+            <div id="detailSizes" class="size-options"></div>
+          </fieldset>
+          <div class="detail-actions">
+            <button class="detail-buy-button" id="detailBuyNow" type="button">Comprar agora</button>
+            <button class="detail-add-button" id="detailAddCart" type="button">Adicionar a sacola</button>
+            <button class="detail-favorite-button" id="detailFavorite" type="button" aria-pressed="false">♡ Favoritar</button>
+          </div>
+          <p class="detail-status" id="detailStatus" role="status" aria-live="polite"></p>
+          <div class="detail-delivery"><span aria-hidden="true">↗</span><p><strong>Frete grátis a partir de R$ 300</strong><br />10% de desconto no pagamento via PIX.</p></div>
+        </div>
+      </section>
+
+      <section class="detail-lower">
+        <div class="detail-section-heading"><span>DETALHES</span><h2>Feita para acompanhar o movimento.</h2></div>
+        <div class="detail-specs"><p id="detailDescriptionCopy"></p><p>As cores podem variar levemente conforme a tela. Consulte a tabela para encontrar o caimento ideal.</p></div>
+      </section>
+
+      <section class="measurement-section" id="medidas" aria-labelledby="measurementTitle">
+        <div class="detail-section-heading"><span>GUIA DE TAMANHOS</span><h2 id="measurementTitle">Tabela de medidas</h2></div>
+        <div class="measurement-table-wrap"><table><thead><tr id="measurementHeadings"></tr></thead><tbody id="measurementRows"></tbody></table></div>
+        <p class="table-note">Medidas aproximadas da peça em centímetros. A variação pode ser de até 2 cm.</p>
+      </section>
+
+      <section class="reviews-section" id="avaliacoes" aria-labelledby="reviewsTitle">
+        <div class="detail-section-heading"><span>QUEM USA, CONTA</span><h2 id="reviewsTitle">Avaliações</h2></div>
+        <div id="detailReviews" class="review-list"></div>
+      </section>
+    </main>
+
+    <footer class="detail-footer"><a href="index.html">NEXUS</a><span>Vista sua presenca.</span></footer>
+    <script src="products.js?v=3"></script>
+    <script src="product-detail.js?v=3"></script>
   </body>

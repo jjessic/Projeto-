@@ -5,7 +5,6 @@ const tamanhoResult = document.getElementById('tamanhoResult');
 const descricaoResult = document.getElementById('descricaoResult');
 const tipsList = document.getElementById('tipsList');
 const cartCount = document.getElementById('cartCount');
-const tamanhoSelect = document.getElementById('tamanhoSelect');
 const addCartButtons = document.querySelectorAll('.add-cart-btn');
 const cartToggle = document.getElementById('cartToggle');
 const cartPanel = document.getElementById('cartPanel');
@@ -36,9 +35,11 @@ const heroSlides = document.querySelectorAll('.hero-slide');
 const slideCurrent = document.getElementById('slideCurrent');
 const previousSlideButton = document.getElementById('prevSlide');
 const nextSlideButton = document.getElementById('nextSlide');
+const categoriesToggle = document.getElementById('categoriesToggle');
+const categoryMenu = document.getElementById('categoryMenu');
 
 let cartItems = 0;
-let cartProducts = [];
+let cartProducts = JSON.parse(localStorage.getItem('nexus-cart') || '[]');
 let selectedPaymentMethod = 'pix';
 const AUTO_DISCOUNT_PERCENT = 0.10;
 const DELIVERY_PRICE = 24.9;
@@ -67,6 +68,24 @@ function showSlide(index) {
 if (previousSlideButton) previousSlideButton.addEventListener('click', () => showSlide(activeSlide - 1));
 if (nextSlideButton) nextSlideButton.addEventListener('click', () => showSlide(activeSlide + 1));
 
+if (categoriesToggle && categoryMenu) {
+  categoriesToggle.addEventListener('click', () => {
+    const isOpen = categoriesToggle.getAttribute('aria-expanded') === 'true';
+    categoriesToggle.setAttribute('aria-expanded', String(!isOpen));
+    categoryMenu.hidden = isOpen;
+  });
+  document.addEventListener('click', (event) => {
+    if (event.target.closest('.category-menu')) return;
+    categoriesToggle.setAttribute('aria-expanded', 'false');
+    categoryMenu.hidden = true;
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    categoriesToggle.setAttribute('aria-expanded', 'false');
+    categoryMenu.hidden = true;
+  });
+}
+
 if (heroSlides.length > 1) {
   setInterval(() => showSlide(activeSlide + 1), 4000);
 }
@@ -74,6 +93,26 @@ if (heroSlides.length > 1) {
 const productCards = Array.from(document.querySelectorAll('.product-card'));
 const favoriteButtons = document.querySelectorAll('.favorite-btn');
 const savedFavorites = JSON.parse(localStorage.getItem('nexus-favorites') || '[]');
+productCards.forEach((card) => {
+  const productId = card.dataset.productId;
+  const product = window.NEXUS_PRODUCTS?.[productId];
+  if (!product) return;
+  const detailUrl = `produto.html?id=${encodeURIComponent(productId)}`;
+  const image = card.querySelector('.product-image img');
+  const imageLink = document.createElement('a');
+  imageLink.className = 'product-detail-link';
+  imageLink.href = detailUrl;
+  imageLink.setAttribute('aria-label', `Ver detalhes de ${product.name}`);
+  image.replaceWith(imageLink);
+  imageLink.append(image);
+
+  const title = card.querySelector('h4');
+  const titleLink = document.createElement('a');
+  titleLink.className = 'product-title-link';
+  titleLink.href = detailUrl;
+  titleLink.textContent = product.name;
+  title.replaceChildren(titleLink);
+});
 const productNames = productCards.map((card) => ({
   name: card.querySelector('h4')?.textContent.trim() || '',
   card,
@@ -203,157 +242,108 @@ document.addEventListener('click', (event) => {
   if (searchSuggestions && !event.target.closest('.search-box')) searchSuggestions.hidden = true;
 });
 
-function calcularTamanho({ peito, cintura, quadril, altura, fitStyle, tipoPeca }) {
-  const media = (peito + cintura + quadril) / 3;
-  const variacao = (altura - 170) / 10;
+function calcularTamanho({ peito, cintura, quadril, ombro, peso, altura, fitStyle, tipoPeca }) {
+  const topSizes = ['P', 'M', 'G', 'GG'];
+  const pantsSizes = ['34', '36', '38', '40', '42', '44', '46', '48'];
+  const fitIndex = fitStyle === 'oversized' ? 1 : fitStyle === 'slim' ? -1 : 0;
 
-  let tamanho = 'M';
-  let descricao = 'Caimento confortável com visual urbano e controle.';
-  let mensagem = 'Seu look está pronto para entrar no clima.';
-
-  if (fitStyle === 'slim') {
-    if (media < 90) tamanho = 'P';
-    if (media >= 90 && media < 100) tamanho = 'M';
-    if (media >= 100 && media < 110) tamanho = 'G';
-    if (media >= 110) tamanho = 'GG';
-    descricao = 'Corte mais ajustado para um visual clean e intenso.';
-    mensagem = 'Esse fit é mais sensacional, com presença e corte impecável.';
-  }
-
-  if (fitStyle === 'regular') {
-    if (media < 95) tamanho = 'P';
-    if (media >= 95 && media < 105) tamanho = 'M';
-    if (media >= 105 && media < 115) tamanho = 'G';
-    if (media >= 115) tamanho = 'GG';
-    descricao = 'Tamanho equilibrado, confortável para uso diário.';
-    mensagem = 'Esse combo vai cair certinho, sem apertar e sem exagero.';
-  }
-
-  if (fitStyle === 'oversized') {
-    if (media < 100) tamanho = 'M';
-    if (media >= 100 && media < 110) tamanho = 'G';
-    if (media >= 110 && media < 120) tamanho = 'GG';
-    if (media >= 120) tamanho = 'XG';
-    descricao = 'Visual mais soltinho com atitude e presença street.';
-    mensagem = 'Tá no clima oversized, com volume e energia total.';
-  }
-
-  if (tipoPeca === 'camiseta') {
-    if (media > 110) tamanho = tamanho === 'M' ? 'G' : tamanho;
-    descricao = 'Camiseta com conforto e visual leve para o cotidiano.';
-  }
-
-  if (tipoPeca === 'moletom') {
-    if (fitStyle === 'oversized') tamanho = tamanho === 'M' ? 'G' : tamanho;
-    descricao = 'Moletom com conforto térmico e vibe release.';
-  }
-
-  if (tipoPeca === 'jaqueta') {
-    if (peito > 100 || cintura > 90) tamanho = tamanho === 'M' ? 'G' : tamanho;
-    descricao = 'Jaqueta com estrutura e caimento premium.';
+  if (tipoPeca === 'bone') {
+    return { tamanho: 'U', descricao: 'Este modelo tem tamanho único e ajuste regulável.', mensagem: 'Compare a circunferência da cabeça com a medida informada na tabela do boné.' };
   }
 
   if (tipoPeca === 'calca') {
-    // Para calça, usa a medida de cintura em números
-    if (cintura < 68) tamanho = '34';
-    else if (cintura < 72) tamanho = '36';
-    else if (cintura < 76) tamanho = '38';
-    else if (cintura < 80) tamanho = '40';
-    else if (cintura < 84) tamanho = '42';
-    else if (cintura < 88) tamanho = '44';
-    else if (cintura < 92) tamanho = '46';
-    else tamanho = '48';
-    descricao = 'Calça com conforto na cintura e ajuste firme no quadril.';
+    const waistSize = cintura < 68 ? 0 : cintura < 72 ? 1 : cintura < 76 ? 2 : cintura < 80 ? 3 : cintura < 84 ? 4 : cintura < 88 ? 5 : cintura < 92 ? 6 : 7;
+    let sizeIndex = Math.max(0, Math.min(pantsSizes.length - 1, waistSize + fitIndex));
+    if (quadril && quadril >= 112) sizeIndex = Math.min(pantsSizes.length - 1, sizeIndex + 1);
+    return { tamanho: pantsSizes[sizeIndex], descricao: 'Estimativa pela cintura' + (quadril ? ' e pelo quadril' : '') + '. Compare com a tabela da peça.', mensagem: 'Esse tamanho é uma estimativa. Confira cintura e quadril na tabela antes de comprar.' };
   }
 
-  if (variacao > 1.5) {
-    if (tamanho === 'P') tamanho = 'M';
-    if (tamanho === 'M') tamanho = 'G';
-    if (tamanho === 'G') tamanho = 'GG';
-  }
+  const measurements = [peito, cintura, quadril, ombro].filter((value) => Number.isFinite(value) && value > 0);
+  const largestMeasure = Math.max(...measurements);
+  let sizeIndex = largestMeasure < 90 ? 0 : largestMeasure < 100 ? 1 : largestMeasure < 110 ? 2 : 3;
+  sizeIndex = Math.max(0, Math.min(topSizes.length - 1, sizeIndex + fitIndex));
+  if (altura && altura >= 190) sizeIndex = Math.min(topSizes.length - 1, sizeIndex + 1);
+  if (peso && peso >= 100) sizeIndex = Math.min(topSizes.length - 1, sizeIndex + 1);
 
-  return { tamanho, descricao, mensagem };
+  const pieceName = { camiseta: 'Camiseta', blusa: 'Blusa', moletom: 'Moletom', jaqueta: 'Jaqueta' }[tipoPeca] || 'Peça';
+  const extraMeasure = cintura || quadril || ombro;
+  return {
+    tamanho: topSizes[sizeIndex],
+    descricao: `Estimativa para ${pieceName.toLowerCase()}${extraMeasure ? ' considerando as medidas informadas' : ' pelo busto/peito'}. Compare com a tabela da peça.`,
+    mensagem: `Pelas medidas informadas, sugerimos o tamanho ${topSizes[sizeIndex]} para sua ${pieceName.toLowerCase()}.`
+  };
 }
 
-function updateTips(fitStyle, tipoPeca) {
-  const tipMap = {
-    slim: [
-      '• Ajuste de peito com corte mais focado.',
-      '• Cintura sem apertar e visual clean.',
-      '• Quadril alinhado para um look elegante.'
-    ],
-    regular: [
-      '• Peito com espaço para se movimentar.',
-      '• Cintura com conforto e estrutura.',
-      '• Quadril em caimento natural e sem exagero.'
-    ],
-    oversized: [
-      '• Peito com volume e presença.',
-      '• Cintura mais solta, com vibe forte.',
-      '• Quadril com caída suave e visual pesado.'
-    ]
+function updateFitRequirement() {
+  const type = document.getElementById('tipoPeca').value;
+  const bust = document.getElementById('busto');
+  const waist = document.getElementById('cintura');
+  const head = document.getElementById('cabeca');
+  bust.required = !['calca', 'bone'].includes(type);
+  waist.required = type === 'calca';
+  head.required = type === 'bone';
+
+  const hintByType = {
+    camiseta: 'Para camiseta, informe o busto/peito. As outras medidas são opcionais.',
+    blusa: 'Para blusa, informe o busto/peito. As outras medidas são opcionais.',
+    moletom: 'Para moletom, informe o busto/peito. As outras medidas são opcionais.',
+    jaqueta: 'Para jaqueta, informe o busto/peito. Cintura, quadril, peso e altura são opcionais.',
+    calca: 'Para calça, informe a cintura. Quadril, peso e altura ajudam a refinar, mas são opcionais.',
+    bone: 'Para boné, informe a circunferência da cabeça.'
   };
+  document.getElementById('fitMeasurementHint').textContent = hintByType[type];
 
-  const selectedTips = tipMap[fitStyle] || tipMap.regular;
-  tipsList.innerHTML = selectedTips.map((tip) => `<li>${tip}</li>`).join('');
-
-  if (tipoPeca === 'jaqueta') {
-    tipsList.innerHTML += '<li>• Jaqueta: reserve espaço para ombro e movimento.</li>';
-  }
-
-  if (tipoPeca === 'calca') {
-    tipsList.innerHTML += '<li>• Calça: a cintura e o quadril devem cair sem prender.</li>';
-  }
 }
 
 function handleSubmit(event) {
   event.preventDefault();
 
+  const type = document.getElementById('tipoPeca').value;
   const data = {
-    peito: Number(document.getElementById('peito').value),
-    cintura: Number(document.getElementById('cintura').value),
-    quadril: Number(document.getElementById('quadril').value),
-    altura: Number(document.getElementById('altura').value),
+    peito: Number(document.getElementById('busto').value) || null,
+    cintura: Number(document.getElementById('cintura').value) || null,
+    quadril: Number(document.getElementById('quadril').value) || null,
+    ombro: Number(document.getElementById('ombro').value) || null,
+    cabeca: Number(document.getElementById('cabeca').value) || null,
+    altura: Number(document.getElementById('altura').value) || null,
+    peso: Number(document.getElementById('peso').value) || null,
     fitStyle: document.getElementById('fitStyle').value,
-    tipoPeca: document.getElementById('tipoPeca').value,
+    tipoPeca: type,
   };
 
   const resultado = calcularTamanho(data);
   tamanhoResult.textContent = resultado.tamanho;
   descricaoResult.textContent = resultado.descricao;
   vampiraMsg.textContent = resultado.mensagem;
-  updateTips(data.fitStyle, data.tipoPeca);
-
-  if (tamanhoSelect) {
-    tamanhoSelect.value = resultado.tamanho;
-  }
-
-  if (assistantWidget && assistantResponse) {
-    const tamanho = resultado.tamanho;
-    assistantResponse.textContent = `O tamanho ideal pra esse look é ${tamanho}. Vai cair certinho na sua peça e o pagamento pode ser feito por PIX, cartão ou boleto.`;
-    assistantSize.value = tamanho;
-  }
+  const tips = {
+    calca: ['• A cintura define a primeira estimativa.', '• O quadril é opcional e ajuda a escolher o caimento.', '• Compare as medidas com a tabela da calça.'],
+    bone: ['• Meça ao redor da cabeça, acima das sobrancelhas.', '• O tamanho único tem ajuste regulável.', '• Confira a faixa de circunferência na tabela.']
+  }[type] || ['• Busto/peito é a medida principal desta peça.', '• Altura, peso, cintura, quadril e ombro são opcionais.', '• Compare a sugestão com a tabela do produto.'];
+  tipsList.innerHTML = tips.map((tip) => `<li>${tip}</li>`).join('');
 }
 
 function resetForm() {
   document.getElementById('fitForm').reset();
-  document.getElementById('peito').value = 96;
-  document.getElementById('cintura').value = 82;
-  document.getElementById('quadril').value = 100;
-  document.getElementById('altura').value = 172;
+  document.getElementById('busto').value = '';
+  document.getElementById('cintura').value = '';
+  document.getElementById('quadril').value = '';
+  document.getElementById('ombro').value = '';
+  document.getElementById('cabeca').value = '';
+  document.getElementById('altura').value = '';
+  document.getElementById('peso').value = '';
   document.getElementById('fitStyle').value = 'regular';
   document.getElementById('tipoPeca').value = 'camiseta';
-
-  tamanhoResult.textContent = 'M';
-  descricaoResult.textContent = 'Caimento confortável com visual urbano e controle.';
-  vampiraMsg.textContent = 'Seu look está pronto para entrar no clima.';
-  if (tamanhoSelect) tamanhoSelect.value = 'M';
-  updateTips('regular', 'camiseta');
+  updateFitRequirement();
+  tamanhoResult.textContent = '—';
+  descricaoResult.textContent = 'As outras medidas podem ficar em branco.';
+  vampiraMsg.textContent = 'Informe o busto para encontrar seu tamanho de camiseta.';
+  tipsList.innerHTML = '<li>• Selecione a peça que quer comprar.</li><li>• Preencha a medida principal indicada.</li><li>• Adicione outras medidas para refinar.</li>';
 }
 
 form.addEventListener('submit', handleSubmit);
 resetBtn.addEventListener('click', resetForm);
-updateTips('regular', 'camiseta');
+document.getElementById('tipoPeca').addEventListener('change', updateFitRequirement);
+updateFitRequirement();
 
 const productViewer = document.getElementById('productViewer');
 const openShirtBtn = document.getElementById('openShirtBtn');
@@ -381,9 +371,142 @@ const closeAssistant = document.getElementById('closeAssistant');
 const minimizeAssistant = document.getElementById('minimizeAssistant');
 const maximizeAssistant = document.getElementById('maximizeAssistant');
 const assistantResponse = document.getElementById('assistantResponse');
-const assistantSize = document.getElementById('assistantSize');
-const assistantSuggest = document.getElementById('assistantSuggest');
-const addToCartBtn = document.getElementById('addToCartBtn');
+const assistantSelectedQuestion = document.getElementById('assistantSelectedQuestion');
+const assistantQuickReplies = document.getElementById('assistantQuickReplies');
+const assistantQuickLabel = document.getElementById('assistantQuickLabel');
+const assistantFollowup = document.getElementById('assistantFollowup');
+const assistantFollowupOptions = document.getElementById('assistantFollowupOptions');
+const assistantFeedback = document.getElementById('assistantFeedback');
+const assistantContact = document.getElementById('assistantContact');
+const assistantRestart = document.getElementById('assistantRestart');
+
+const assistantFaqs = {
+  delivery: {
+    followups: [
+      { label: 'Quero saber o prazo para o meu CEP', answer: 'O prazo varia conforme o CEP e a transportadora. Como a loja não calcula essa previsão automaticamente, envie seu CEP pelo WhatsApp ou e-mail antes de concluir a compra. A equipe confirmará a estimativa em dias úteis para sua região.' },
+      { label: 'Quando o frete é grátis?', answer: 'O frete é grátis a partir de R$ 300 em compras. Em pedidos abaixo desse valor, o frete custa R$ 24,90.' }
+    ]
+  },
+  payments: {
+    followups: [
+      { label: 'Quais formas de pagamento são aceitas?', answer: 'A loja aceita PIX, cartão de crédito e boleto bancário. O PIX recebe 10% de desconto, o cartão pode ser parcelado em até 12 vezes e o boleto é pago à vista. Selecione a forma desejada no carrinho antes de finalizar.' },
+      { label: 'Como funciona o desconto no PIX?', answer: 'Ao selecionar PIX, o carrinho aplica 10% de desconto sobre o valor dos produtos. O total atualizado aparece no resumo antes de finalizar o pedido.' },
+      { label: 'Como consulto as parcelas do cartão?', answer: 'No carrinho, selecione Cartão e escolha o número de parcelas. O sistema apresenta o valor de cada parcela, com opções de até 12 vezes.' }
+    ]
+  },
+  cancel: {
+    followups: [
+      { label: 'O pedido ainda não foi enviado', answer: 'Entre em contato com a equipe pelo WhatsApp ou e-mail e informe o número do pedido. Se o processamento ou envio ainda não tiver começado, a equipe verificará se é possível interrompê-lo e confirmará o cancelamento e o reembolso.' },
+      { label: 'O pedido já foi enviado', answer: 'Depois que o pedido é despachado, o cancelamento pode não ser mais possível. Entre em contato com a equipe antes de recusar a entrega ou devolver o pacote; ela informará o procedimento adequado para o seu caso.' }
+    ]
+  },
+  exchange: {
+    followups: [
+      { label: 'Quero trocar o tamanho', answer: 'Para solicitar uma troca, entre em contato em até 7 dias corridos após o recebimento e informe o número do pedido, a peça e o tamanho desejado. A troca depende da disponibilidade em estoque. A equipe confirmará a disponibilidade e enviará as instruções de postagem; aguarde essas orientações antes de despachar o produto.' },
+      { label: 'Quero devolver a compra', answer: 'Em compras feitas pela internet, você pode solicitar a devolução por arrependimento em até 7 dias corridos após o recebimento, conforme o direito previsto no Código de Defesa do Consumidor. Informe o número do pedido pelo WhatsApp ou e-mail para receber as instruções de postagem e reembolso. Aguarde as orientações antes de enviar o produto.' },
+      { label: 'A peça chegou com defeito', answer: 'Entre em contato com a equipe e informe o número do pedido. Descreva o defeito e envie fotos da peça e da embalagem. A equipe avaliará o caso e explicará a solução e os próximos passos aplicáveis. Preserve o produto e aguarde as instruções antes de enviá-lo.' }
+    ]
+  },
+  tracking: {
+    followups: [
+      { label: 'Não recebi a confirmação do pedido', answer: 'Verifique a caixa de entrada e a pasta de spam do e-mail utilizado na compra. Se não localizar a confirmação, envie seu nome completo e e-mail pelo WhatsApp ou e-mail da loja para a equipe localizar o pedido.' },
+      { label: 'O prazo de entrega já passou', answer: 'Envie o número do pedido e o CEP de entrega pelo WhatsApp ou e-mail. A equipe consultará a transportadora e informará a situação e a nova previsão de entrega.' }
+    ]
+  }
+};
+let activeAssistantFaq = '';
+
+function resetAssistantFaq(message = 'Olá! Eu sou o X Store. Posso ajudar com informações sobre tamanhos, pedidos, entrega, pagamentos e trocas. O que você gostaria de saber?') {
+  activeAssistantFaq = '';
+  assistantResponse.textContent = message;
+  assistantResponse.hidden = false;
+  assistantSelectedQuestion.textContent = '';
+  assistantSelectedQuestion.hidden = true;
+  assistantQuickReplies.hidden = false;
+  assistantQuickLabel.hidden = false;
+  assistantFollowup.hidden = true;
+  assistantFeedback.hidden = true;
+  assistantContact.hidden = true;
+  assistantRestart.hidden = true;
+}
+
+function showAssistantFollowups(question, followups = []) {
+  assistantSelectedQuestion.textContent = question;
+  assistantSelectedQuestion.hidden = false;
+  assistantResponse.hidden = true;
+  assistantQuickReplies.hidden = true;
+  assistantQuickLabel.hidden = true;
+  assistantFollowup.hidden = false;
+  assistantFeedback.hidden = true;
+  assistantContact.hidden = true;
+  assistantRestart.hidden = false;
+  assistantFollowupOptions.innerHTML = followups.map((item, index) => `
+    <button type="button" data-followup-index="${index}">${item.label}</button>
+  `).join('');
+}
+
+document.getElementById('assistantWidget').addEventListener('click', (event) => {
+  const faqButton = event.target.closest('[data-faq]');
+  if (faqButton) {
+    if (faqButton.dataset.faq === 'size') {
+      assistantWidget.classList.add('closed');
+      assistantToggle.style.display = 'block';
+      document.getElementById('fit-box')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      window.location.hash = 'fit-box';
+      return;
+    }
+    if (faqButton.dataset.faq === 'contact') {
+      assistantSelectedQuestion.textContent = faqButton.textContent.trim();
+      assistantSelectedQuestion.hidden = false;
+      assistantResponse.textContent = 'Você pode falar com a equipe pelos canais abaixo. O horário de atendimento é das 10h às 22h. Se pretende visitar o endereço, confirme antes se há atendimento presencial.';
+      assistantResponse.hidden = false;
+      assistantQuickReplies.hidden = true;
+      assistantQuickLabel.hidden = true;
+      assistantFollowup.hidden = true;
+      assistantFeedback.hidden = false;
+      assistantContact.hidden = false;
+      assistantRestart.hidden = false;
+      return;
+    }
+    const faq = assistantFaqs[faqButton.dataset.faq];
+    if (faq) {
+      activeAssistantFaq = faqButton.dataset.faq;
+      showAssistantFollowups(faqButton.textContent.trim(), faq.followups);
+    }
+    return;
+  }
+
+  const followupButton = event.target.closest('[data-followup-index]');
+  if (followupButton) {
+    const faq = assistantFaqs[activeAssistantFaq];
+    const followup = faq?.followups[Number(followupButton.dataset.followupIndex)];
+    if (followup) {
+      assistantSelectedQuestion.textContent = `${assistantSelectedQuestion.textContent}\n${followup.label}`;
+      assistantResponse.hidden = false;
+      assistantResponse.textContent = followup.answer;
+      assistantFollowup.hidden = true;
+      assistantFeedback.hidden = false;
+    }
+    return;
+  }
+
+  const feedbackButton = event.target.closest('[data-feedback]');
+  if (feedbackButton) {
+    if (feedbackButton.dataset.feedback === 'yes') {
+      resetAssistantFaq('Obrigado pela confirmação. Se surgir outra dúvida, estarei por aqui para ajudar.');
+    } else {
+      assistantResponse.textContent = 'Entendo. Entre em contato com a equipe e informe o número do pedido e os detalhes da solicitação para receber atendimento.';
+      assistantQuickReplies.hidden = true;
+      assistantFollowup.hidden = true;
+      assistantFeedback.hidden = true;
+      assistantContact.hidden = false;
+      assistantRestart.hidden = false;
+    }
+    return;
+  }
+
+  if (event.target.closest('#assistantRestart')) resetAssistantFaq();
+});
 
 function formatCurrency(value) {
   return new Intl.NumberFormat('pt-BR', {
@@ -401,7 +524,7 @@ function updateInstallmentOptions() {
   
   const subtotal = getSubtotal();
   const discount = subtotal * AUTO_DISCOUNT_PERCENT;
-  const delivery = subtotal > 250 ? 0 : DELIVERY_PRICE;
+  const delivery = subtotal >= 300 ? 0 : DELIVERY_PRICE;
   const finalTotal = subtotal - discount + delivery;
 
   const options = installmentSelect.querySelectorAll('option');
@@ -430,7 +553,7 @@ function renderCart() {
 
   const subtotal = getSubtotal();
   const discount = subtotal * AUTO_DISCOUNT_PERCENT;
-  const delivery = subtotal > 250 ? 0 : DELIVERY_PRICE;
+  const delivery = subtotal >= 300 ? 0 : DELIVERY_PRICE;
   const finalTotal = subtotal - discount + delivery;
 
   cartList.innerHTML = cartProducts.map((item) => `
@@ -461,6 +584,7 @@ function renderCart() {
 function updateCartCount() {
   const totalQuantity = cartProducts.reduce((sum, item) => sum + Number(item.quantity || 1), 0);
   cartItems = totalQuantity;
+  localStorage.setItem('nexus-cart', JSON.stringify(cartProducts));
   if (cartCount) {
     cartCount.textContent = String(totalQuantity);
   }
@@ -493,33 +617,16 @@ closeAssistant.addEventListener('click', closeAssistantPanel);
 minimizeAssistant.addEventListener('click', toggleMinimize);
 maximizeAssistant.addEventListener('click', toggleMaximize);
 
-assistantSuggest.addEventListener('click', () => {
-  const selectedSize = assistantSize.value || tamanhoResult.textContent;
-  const message = `O tamanho ideal pra esse look é ${selectedSize}. Vai cair certinho na sua peça e o pagamento pode ser feito por PIX, cartão ou boleto.`;
-  assistantResponse.textContent = message;
-});
-
-if (addToCartBtn) {
-  addToCartBtn.addEventListener('click', () => {
-    cartItems += 1;
-    updateCartCount();
-    const selectedSize = assistantSize.value || tamanhoResult.textContent;
-    assistantResponse.textContent = `Adicionado ao carrinho: jaqueta no tamanho ${selectedSize}. Você pode finalizar por PIX, cartão ou boleto.`;
-  });
-}
-
 addCartButtons.forEach((button) => {
   button.addEventListener('click', () => {
     cartItems += 1;
     const productName = button.dataset.product || 'Produto';
-    const selectedSize = button.closest('.product-card') ? (tamanhoSelect ? tamanhoSelect.value : 'M') : (assistantSize ? assistantSize.value : 'M');
+    const productId = button.closest('.product-card')?.dataset.productId;
+    const selectedSize = window.NEXUS_PRODUCTS?.[productId]?.sizes?.[0] || 'M';
     const price = Number(button.dataset.price || 0);
     cartProducts.push({ id: `${productName}-${selectedSize}-${Date.now()}`, name: productName, size: selectedSize, price });
     cartItems = cartProducts.length;
     updateCartCount();
-    if (assistantResponse) {
-      assistantResponse.textContent = `${productName} foi adicionado ao carrinho. O pagamento pode ser feito por PIX, cartão ou boleto.`;
-    }
     if (cartPanel) {
       cartPanel.classList.add('open');
     }
@@ -548,9 +655,6 @@ if (cartList) {
       cartProducts = cartProducts.filter((item) => item.id !== idToRemove);
       updateCartCount();
 
-      if (assistantResponse) {
-        assistantResponse.textContent = 'Produto removido do carrinho. Você pode continuar escolhendo sua peça.';
-      }
       return;
     }
 
@@ -574,9 +678,6 @@ if (cartList) {
     }
 
     updateCartCount();
-    if (assistantResponse) {
-      assistantResponse.textContent = `Quantidade atualizada para ${item.name}.`;
-    }
   });
 }
 
@@ -590,10 +691,6 @@ if (paymentOptions) {
         installmentBox.style.display = selectedPaymentMethod === 'cartao' ? 'block' : 'none';
       }
       
-      if (assistantResponse) {
-        const labelMap = { pix: 'PIX', cartao: 'Cartão', boleto: 'Boleto' };
-        assistantResponse.textContent = `Método de pagamento selecionado: ${labelMap[selectedPaymentMethod]}.`;
-      }
     });
   });
 }
@@ -601,9 +698,6 @@ if (paymentOptions) {
 if (cartCheckout) {
   cartCheckout.addEventListener('click', () => {
     if (cartProducts.length === 0) {
-      if (assistantResponse) {
-        assistantResponse.textContent = 'Seu carrinho está vazio. Adicione uma peça antes de seguir com o pagamento.';
-      }
       return;
     }
 
@@ -613,9 +707,6 @@ if (cartCheckout) {
     const cepVal = customerCEP && customerCEP.value.trim() ? customerCEP.value.trim() : '';
 
     if (!nameVal || !streetVal || !numberVal || !cepVal) {
-      if (assistantResponse) {
-        assistantResponse.textContent = 'Por favor, preencha todos os campos obrigatórios: nome, rua, número e CEP.';
-      }
       return;
     }
 
@@ -625,12 +716,8 @@ if (cartCheckout) {
     
     const subtotal = getSubtotal();
     const discount = subtotal * AUTO_DISCOUNT_PERCENT;
-    const delivery = subtotal > 250 ? 0 : DELIVERY_PRICE;
+    const delivery = subtotal >= 300 ? 0 : DELIVERY_PRICE;
     const finalTotal = subtotal - discount + delivery;
-
-    if (assistantResponse) {
-      assistantResponse.innerHTML = `<strong>Pedido Confirmado!</strong><br>Cliente: ${nameVal}<br>Endereço: ${fullAddress}, CEP ${cepVal}<br>Pagamento: ${paymentName}<br>Total: ${formatCurrency(finalTotal)}<br><em>Obrigado por sua compra!</em>`;
-    }
 
     setTimeout(() => {
       if (cartPanel) {
@@ -650,8 +737,13 @@ if (cartCheckout) {
 assistantToggle.style.display = 'block';
 updateCartCount();
 
-if (tamanhoResult && assistantSize) {
-  assistantSize.value = tamanhoResult.textContent.trim();
+if (sessionStorage.getItem('nexus-open-cart') === 'true') {
+  cartPanel?.classList.add('open');
+  sessionStorage.removeItem('nexus-open-cart');
+}
+
+if (new URLSearchParams(window.location.search).has('abrir-carrinho')) {
+  window.history.replaceState({}, document.title, `${window.location.pathname}${window.location.hash}`);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
