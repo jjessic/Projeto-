@@ -1,5 +1,6 @@
 import mysql.connector
 from datetime import date
+import time
 
 def realizar_compra():
     try:
@@ -11,6 +12,33 @@ def realizar_compra():
             database="nexus"
         )
         cursor = conexao.cursor()
+
+        # --- AUTOMATIZAÇÃO: INSERIR/ATUALIZAR CLIENTES PADRÃO ---
+        clientes_iniciais = [
+            (1, 'João Silva', '(11)99476-1582', '123.456.789-00', 'joao.silva@email.com', 'rua inglatera, 123 São Paulo', 'ativo'),
+            (2, 'Maria Souza', '(21)98765-4321', '987.654.321-00', 'marizinhasoso@gmail.com', 'rua sem entrada, 1533 - Rio de janeiro', 'inativo'),
+            (3, 'denis silva', '(18)99845-4432', '111.222.333-44', 'bigodedeboi@gmail.com', 'rua do bigode, 123 - Andradina', 'ativo'),
+            (4, 'Juliana Mendes', '(11) 95544-3322', '222.333.444-55', 'juliana@email.com', 'Rua Augusta, 100 - São Paulo', 'Ativo'),
+            (5, 'Lucas Pereira', '(11) 94433-2211', '555.666.777-88', 'lucas@email.com', 'Av. Paulista, 500 - São Paulo', 'Ativo'),
+            (6, 'Beatriz Lima', '(11) 93322-1100', '999.888.777-66', 'beatriz@email.com', 'Praça da Sé, 50 - São Paulo', 'Inativo'),
+            (7, 'Rafael Costa', '(11) 92211-0099', '444.555.666-77', 'rafa@gmail.com', 'Rua das Flores, 200 - São Paulo', 'Ativo'),
+            (8, 'Fernanda Rocha', '(11) 91100-9988', '888.777.666-55', 'fernanda.rocha@nexus.com.br', 'Av. Paulista, 800 - São Paulo', 'Ativo')
+        ]
+
+        sql_cliente = """
+            INSERT INTO clientes (id_cliente, nome, telefone, cpf, email, endereco, status) 
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            ON DUPLICATE KEY UPDATE 
+                nome=VALUES(nome), 
+                telefone=VALUES(telefone), 
+                cpf=VALUES(cpf), 
+                email=VALUES(email), 
+                endereco=VALUES(endereco), 
+                status=VALUES(status);
+        """
+        cursor.executemany(sql_cliente, clientes_iniciais)
+        conexao.commit()
+        # --------------------------------------------------------
 
         carrinho = []  # Lista para armazenar os itens escolhidos
 
@@ -186,16 +214,14 @@ def realizar_compra():
 
             # --- IDENTIFICAÇÃO DO CLIENTE PARA A VENDA ---
             print("\n--- IDENTIFICAÇÃO DO CLIENTE ---")
-            cursor.execute("SELECT id_cliente, nome FROM clientes;")
+            cursor.execute("SELECT id_cliente, nome, status FROM clientes;")
             clientes = cursor.fetchall()
             for c in clientes:
-                print(f"ID Cliente: {c[0]} | Nome: {c[1]}")
+                print(f"ID Cliente: {c[0]} | Nome: {c[1]} | Status: {c[2]}")
             
             id_cliente_escolhido = int(input("Digite o ID do cliente que está a realizar a compra: "))
 
             # --- GRAVAÇÃO NA BASE DE DADOS (VENDAS E ITENS) ---
-            # Gera um ID único para a venda baseado no timestamp atual
-            import time
             id_venda_atual = int(time.time())
             data_atual = date.today()
 

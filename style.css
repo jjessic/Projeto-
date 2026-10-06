@@ -1511,3 +1511,50 @@ select option:checked, select option:hover { background: #eee8ff; color: #171717
   .assistant-widget:not(.closed) .assistant-body { max-height: 72vh; }
   #fit-box { scroll-margin-top: 148px; }
 }
+/* --- ABA EXCLUSIVA / PERSONALIZADA --- */
+.exclusive-tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border: 1px dashed #ff5a1f;
+  border-radius: 4px;
+  background: rgba(255, 90, 31, 0.04);
+  color: #ff5a1f;
+  font-family: "Orbitron", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.exclusive-tab:hover {
+  background: #ff5a1f;
+  color: #fff;
+  border-style: solid;
+}
+
+.exclusive-badge {
+  display: inline-grid;
+  place-items: center;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: #111;
+  color: #fff;
+  font-size: 0.6rem;
+  font-weight: 800;
+}
+
+.dark-theme .exclusive-tab {
+  background: rgba(255, 90, 31, 0.08);
+  border-color: #ff8055;
+  color: #ff8055;
+}
+
+.dark-theme .exclusive-tab:hover {
+  background: #ff5a1f;
+  color: #fff;
+}
