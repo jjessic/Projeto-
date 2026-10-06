@@ -739,3 +739,31 @@ document.addEventListener('DOMContentLoaded', () => {
     widget.classList.toggle('maximized');
   };
 });
+// Ação para o botão Meu Espaço
+const exclusiveTab = document.querySelector('.exclusive-tab');
+
+if (exclusiveTab) {
+  exclusiveTab.addEventListener('click', () => {
+    // Insira aqui o que deseja que aconteça ao clicar
+    alert('Bem-vindo ao seu Espaço VIP!');
+    
+// Roda suavemente até o próximo drop ao clicar em Meu Espaço
+(() => {
+  const exclusiveTabLink = document.querySelector('.exclusive-tab');
+
+  if (exclusiveTabLink) {
+    exclusiveTabLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetHash = exclusiveTabLink.getAttribute('href');
+      const targetEl = document.querySelector(targetHash);
+      
+      if (targetEl) {
+        targetEl.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    });
+  }
+})(); 
+'}'
