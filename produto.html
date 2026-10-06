@@ -16,6 +16,7 @@
     />
     <link rel="stylesheet" href="style.css?v=3" />
     <link rel="stylesheet" href="product-detail.css" />
+    <link rel="stylesheet" href="shop-header.css" />
   </head>
   <body class="product-page">
     <header class="topbar detail-topbar">
@@ -24,7 +25,18 @@
         <span><span class="brand-kicker">streetwear store</span><strong>NEXUS</strong></span>
       </a>
       <a class="detail-back-link" href="index.html#colecao">← Voltar para a loja</a>
-      <a class="detail-cart-link" href="index.html?abrir-carrinho=1#colecao" aria-label="Abrir carrinho">Sacola <span class="bag-icon" aria-hidden="true"></span></a>
+      <div class="store-header-actions">
+        <button type="button" class="theme-toggle" id="themeToggle" aria-label="Ativar tema escuro">☾</button>
+        <button type="button" class="favorites-toggle" id="favoritesToggle" aria-label="Abrir favoritos" aria-expanded="false">
+          <span aria-hidden="true">♡</span><strong id="favoritesCount">0</strong>
+        </button>
+        <button type="button" class="cart-pill" id="cartToggle" aria-label="Abrir carrinho" aria-expanded="false">
+          <span class="bag-icon" aria-hidden="true"></span><strong id="cartCount">0</strong>
+        </button>
+        <a class="store-account-link" href="conta.html" aria-label="Minha conta">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4" /><path d="M4.5 21a7.5 7.5 0 0 1 15 0" /></svg>
+        </a>
+      </div>
     </header>
 
     <main class="detail-main">
@@ -76,4 +88,8 @@
     <footer class="detail-footer"><a href="index.html">NEXUS</a><span>Vista sua presenca.</span></footer>
     <script src="products.js?v=3"></script>
     <script src="product-detail.js?v=3"></script>
+    <script src="shop-header.js?v=1"></script>
+    <script src="store-config.js?v=1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="account.js?v=1"></script>
   </body>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Entre ou crie sua conta Nexus Store e acompanhe seus pedidos." />
+    <title>Minha conta | Nexus Store</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css?v=9" />
+    <link rel="stylesheet" href="account.css?v=1" />
+  </head>
+  <body class="account-page">
+    <header class="account-topbar">
+      <a class="account-brand" href="index.html" aria-label="Nexus Store, início"><span class="brand-mark">N</span><strong>NEXUS</strong></a>
+      <a class="account-back-link" href="index.html#colecao">Voltar para a loja</a>
+    </header>
+
+    <main class="account-main">
+      <section class="account-intro">
+        <span>NEXUS / SUA CONTA</span>
+        <h1>Seu espaço.<br />Seu próximo movimento.</h1>
+        <p>Acompanhe seus pedidos e mantenha seus dados em um só lugar.</p>
+      </section>
+
+      <section class="account-workspace" aria-label="Acesso e dados da conta">
+        <div class="account-auth-view" id="accountAuthView">
+          <div class="account-tabs" role="tablist" aria-label="Acesso à conta">
+            <button type="button" class="account-tab is-active" id="loginTab" role="tab" aria-selected="true" aria-controls="loginPanel">Entrar</button>
+            <button type="button" class="account-tab" id="signupTab" role="tab" aria-selected="false" aria-controls="signupPanel">Criar conta</button>
+          </div>
+
+          <form class="account-form" id="loginPanel" role="tabpanel" aria-labelledby="loginTab">
+            <span class="account-form-kicker">BEM-VINDO DE VOLTA</span>
+            <h2>Entre na sua conta</h2>
+            <label>E-mail<input name="email" type="email" autocomplete="email" pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Use o formato nome@dominio.com." maxlength="254" required /></label>
+            <label>Senha<input name="password" type="password" autocomplete="current-password" minlength="6" required /></label>
+            <button class="account-submit" type="submit">Entrar</button>
+          </form>
+
+          <form class="account-form" id="signupPanel" role="tabpanel" aria-labelledby="signupTab" hidden>
+            <span class="account-form-kicker">FAÇA PARTE DA NEXUS</span>
+            <h2>Crie sua conta</h2>
+            <label>Nome completo<input name="full_name" type="text" autocomplete="name" maxlength="120" required /></label>
+            <label>E-mail<input name="email" type="email" autocomplete="email" pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Use o formato nome@dominio.com." maxlength="254" required /></label>
+            <label>Senha<input name="password" type="password" autocomplete="new-password" minlength="6" required /></label>
+            <label>Confirmar senha<input name="password_confirmation" type="password" autocomplete="new-password" minlength="6" required /></label>
+            <button class="account-submit" type="submit">Criar conta</button>
+          </form>
+          <p class="account-message" id="accountMessage" role="status" aria-live="polite"></p>
+          <p class="account-privacy">Sua senha é gerenciada pelo Supabase Auth e nunca é salva no perfil da loja.</p>
+        </div>
+
+        <div class="account-signed-view" id="accountSignedView" hidden>
+          <div class="account-signed-heading">
+            <div><span class="account-form-kicker">ÁREA DO CLIENTE</span><h2 id="accountWelcome">Minha conta</h2></div>
+            <button type="button" class="account-signout" id="accountSignout">Sair</button>
+          </div>
+          <div class="account-tabs account-signed-tabs" role="tablist" aria-label="Minha conta">
+            <button type="button" class="account-tab is-active" id="profileTab" role="tab" aria-selected="true">Meus dados</button>
+            <button type="button" class="account-tab" id="ordersTab" role="tab" aria-selected="false">Meus pedidos</button>
+          </div>
+          <form class="account-form profile-form" id="profilePanel">
+            <label>Nome completo<input name="full_name" type="text" autocomplete="name" maxlength="120" required /></label>
+            <label>E-mail<input name="email" type="email" disabled /></label>
+            <label>Telefone<input name="phone" type="tel" autocomplete="tel" maxlength="30" /></label>
+            <div class="account-field-row">
+              <label>Data de nascimento<input name="birth_date" type="date" /></label>
+              <label>Gênero (opcional)
+                <select name="gender_identity"><option value="">Prefiro não informar</option><option>Mulher</option><option>Homem</option><option>Não binário</option><option>Outro</option></select>
+              </label>
+            </div>
+            <label>Orientação sexual (opcional)
+              <select name="sexual_orientation"><option value="">Prefiro não informar</option><option>Heterossexual</option><option>Homossexual</option><option>Bissexual</option><option>Pansexual</option><option>Assexual</option><option>Outro</option></select>
+            </label>
+            <p class="account-sensitive-note">Esse dado é opcional e não é necessário para comprar.</p>
+            <button class="account-submit" type="submit">Salvar dados</button>
+          </form>
+          <section class="account-orders" id="ordersPanel" hidden aria-label="Histórico de pedidos">
+            <div id="ordersList"><p class="account-empty">Carregando seus pedidos...</p></div>
+          </section>
+          <p class="account-message" id="profileMessage" role="status" aria-live="polite"></p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="account-footer"><a href="index.html">NEXUS</a><span>Vista sua presença.</span></footer>
+    <script src="store-config.js?v=1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="account.js?v=1"></script>
+  </body>
+</html>

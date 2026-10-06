@@ -96,10 +96,6 @@ document.getElementById('detailAddCart').addEventListener('click', () => {
 });
 document.getElementById('detailBuyNow').addEventListener('click', () => {
   addProductToCart();
-  sessionStorage.setItem('nexus-open-cart', 'true');
-  window.location.href = 'index.html?abrir-carrinho=1#colecao';
+  document.getElementById('cartToggle')?.click();
 });
 
-document.querySelector('.detail-cart-link')?.addEventListener('click', () => {
-  sessionStorage.setItem('nexus-open-cart', 'true');
-});

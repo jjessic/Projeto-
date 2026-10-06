@@ -15,10 +15,6 @@ const categoryEmpty = document.getElementById('categoryEmpty');
 const categoryTabs = document.getElementById('categoryTabs');
 const money = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 
-document.getElementById('categoryCartLink')?.addEventListener('click', () => {
-  sessionStorage.setItem('nexus-open-cart', 'true');
-});
-
 const tabs = [
   { slug: '', label: 'Todas' },
   ...Object.entries(categoryLabels).map(([slug, label]) => ({ slug, label }))

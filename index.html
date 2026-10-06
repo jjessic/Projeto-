@@ -15,6 +15,7 @@
         rel="stylesheet"
       />
       <link rel="stylesheet" href="style.css?v=9" />
+      <link rel="stylesheet" href="shop-header.css?v=1" />
     </head>
     <body>
       <header class="topbar">
@@ -54,6 +55,9 @@
             <span class="bag-icon" aria-hidden="true"></span>
             <strong id="cartCount">0</strong>
           </button>
+          <a class="store-account-link" href="conta.html" aria-label="Minha conta">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4" /><path d="M4.5 21a7.5 7.5 0 0 1 15 0" /></svg>
+          </a>
         </div>
       </header>
 
@@ -336,6 +340,16 @@
                 <input type="text" id="customerName" placeholder="Seu nome completo" />
               </label>
               <label>
+                <span>Telefone</span>
+                <input type="tel" id="customerPhone" placeholder="(00) 00000-0000" autocomplete="tel" />
+              </label>
+              <label>
+                <span>Modalidade de entrega</span>
+                <select id="deliveryOption" required><option value="">Carregando opções...</option></select>
+              </label>
+              <p id="deliveryStatus" class="delivery-status" role="status"></p>
+              <div id="customerAddressFields">
+              <label>
                 <span>Rua</span>
                 <input type="text" id="customerStreet" placeholder="Nome da rua" />
               </label>
@@ -353,6 +367,7 @@
                 <span>CEP</span>
                 <input type="text" id="customerCEP" placeholder="00000-000" />
               </label>
+              </div>
             </div>
 
             <span class="mini-checkout-label">Método de Pagamento</span>
@@ -384,6 +399,8 @@
           </div>
 
           <button type="button" class="primary-btn cart-checkout">Finalizar Pedido</button>
+          <p id="checkoutStatus" class="checkout-status" role="status" aria-live="polite"></p>
+          <p class="checkout-payment-note">O pedido ficará aguardando a confirmação do pagamento. O site ainda não processa pagamentos.</p>
         </div>
       </aside>
 
@@ -508,5 +525,8 @@
 
       <script src="products.js?v=3"></script>
       <script src="app.js?v=10"></script>
+      <script src="store-config.js?v=1"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+      <script src="account.js?v=1"></script>
     </body>
   </html>

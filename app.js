@@ -42,7 +42,11 @@ let cartItems = 0;
 let cartProducts = JSON.parse(localStorage.getItem('nexus-cart') || '[]');
 let selectedPaymentMethod = 'pix';
 const AUTO_DISCOUNT_PERCENT = 0.10;
-const DELIVERY_PRICE = 24.9;
+
+function getSelectedDeliveryOption() {
+  const selectedId = document.getElementById('deliveryOption')?.value;
+  return (window.NEXUS_DELIVERY_OPTIONS || []).find((option) => option.id === selectedId) || null;
+}
 
 function setTheme(theme) {
   document.body.classList.toggle('dark-theme', theme === 'dark');
@@ -523,8 +527,8 @@ function updateInstallmentOptions() {
   if (!installmentSelect) return;
   
   const subtotal = getSubtotal();
-  const discount = subtotal * AUTO_DISCOUNT_PERCENT;
-  const delivery = subtotal >= 300 ? 0 : DELIVERY_PRICE;
+  const discount = selectedPaymentMethod === 'pix' ? subtotal * AUTO_DISCOUNT_PERCENT : 0;
+  const delivery = Number(getSelectedDeliveryOption()?.fee || 0);
   const finalTotal = subtotal - discount + delivery;
 
   const options = installmentSelect.querySelectorAll('option');
@@ -552,8 +556,8 @@ function renderCart() {
   }
 
   const subtotal = getSubtotal();
-  const discount = subtotal * AUTO_DISCOUNT_PERCENT;
-  const delivery = subtotal >= 300 ? 0 : DELIVERY_PRICE;
+  const discount = selectedPaymentMethod === 'pix' ? subtotal * AUTO_DISCOUNT_PERCENT : 0;
+  const delivery = Number(getSelectedDeliveryOption()?.fee || 0);
   const finalTotal = subtotal - discount + delivery;
 
   cartList.innerHTML = cartProducts.map((item) => `
@@ -690,49 +694,21 @@ if (paymentOptions) {
       if (installmentBox) {
         installmentBox.style.display = selectedPaymentMethod === 'cartao' ? 'block' : 'none';
       }
-      
+      renderCart();
     });
   });
 }
 
 if (cartCheckout) {
   cartCheckout.addEventListener('click', () => {
-    if (cartProducts.length === 0) {
-      return;
+    if (!window.NexusStoreAccount) {
+      const status = document.getElementById('checkoutStatus');
+      if (status) status.textContent = 'O checkout da conta ainda não foi carregado.';
     }
-
-    const nameVal = customerName && customerName.value.trim() ? customerName.value.trim() : '';
-    const streetVal = customerStreet && customerStreet.value.trim() ? customerStreet.value.trim() : '';
-    const numberVal = customerNumber && customerNumber.value.trim() ? customerNumber.value.trim() : '';
-    const cepVal = customerCEP && customerCEP.value.trim() ? customerCEP.value.trim() : '';
-
-    if (!nameVal || !streetVal || !numberVal || !cepVal) {
-      return;
-    }
-
-    const paymentName = selectedPaymentMethod === 'pix' ? 'PIX' : selectedPaymentMethod === 'cartao' ? 'Cartão' : 'Boleto';
-    const complementVal = customerComplement && customerComplement.value.trim() ? `, ${customerComplement.value.trim()}` : '';
-    const fullAddress = `${streetVal}, ${numberVal}${complementVal}`;
-    
-    const subtotal = getSubtotal();
-    const discount = subtotal * AUTO_DISCOUNT_PERCENT;
-    const delivery = subtotal >= 300 ? 0 : DELIVERY_PRICE;
-    const finalTotal = subtotal - discount + delivery;
-
-    setTimeout(() => {
-      if (cartPanel) {
-        cartPanel.classList.remove('open');
-      }
-      cartProducts = [];
-      if (customerName) customerName.value = '';
-      if (customerStreet) customerStreet.value = '';
-      if (customerNumber) customerNumber.value = '';
-      if (customerComplement) customerComplement.value = '';
-      if (customerCEP) customerCEP.value = '';
-      updateCartCount();
-    }, 2500);
   });
 }
+
+document.getElementById('deliveryOption')?.addEventListener('change', renderCart);
 
 assistantToggle.style.display = 'block';
 updateCartCount();
