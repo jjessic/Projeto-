@@ -3,11 +3,25 @@
   const configured = Boolean(config.supabaseUrl && config.supabaseAnonKey && window.supabase?.createClient);
   const client = configured ? window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey) : null;
   const accountPage = document.body.classList.contains('account-page');
+  const themeToggle = document.getElementById('themeToggle');
   const configMissingMessage = 'O cadastro não está disponível no momento. Tente novamente mais tarde.';
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   let currentUser = null;
   let readyResolve;
   const ready = new Promise((resolve) => { readyResolve = resolve; });
+
+  if (accountPage && themeToggle) {
+    const setTheme = (theme) => {
+      document.body.classList.toggle('dark-theme', theme === 'dark');
+      themeToggle.textContent = theme === 'dark' ? '☀' : '☾';
+      themeToggle.setAttribute('aria-label', theme === 'dark' ? 'Ativar tema claro' : 'Ativar tema escuro');
+      localStorage.setItem('nexus-theme', theme);
+    };
+    setTheme(localStorage.getItem('nexus-theme') || 'light');
+    themeToggle.addEventListener('click', () => {
+      setTheme(document.body.classList.contains('dark-theme') ? 'light' : 'dark');
+    });
+  }
 
   function message(element, text, isError = true) {
     if (!element) return;
@@ -61,7 +75,12 @@
     sessionStorage.removeItem('nexus-pending-action');
     const target = pending.target || {};
     let element = null;
-    if (pending.intent === 'buy-now') element = document.getElementById('detailBuyNow');
+    if (pending.intent === 'buy-now') {
+      element = document.getElementById('detailBuyNow');
+      if (!element && target.productName) {
+        element = [...document.querySelectorAll('.buy-now-btn')].find((button) => button.dataset.product === target.productName);
+      }
+    }
     if (pending.intent === 'checkout') element = document.getElementById('cartToggle');
     if (pending.intent === 'add-cart') {
       element = document.getElementById('detailAddCart');
@@ -116,7 +135,7 @@
 
   if (!accountPage) {
     document.addEventListener('click', async (event) => {
-      const target = event.target.closest('#detailFavorite, .favorite-btn, #detailAddCart, .add-cart-btn, #detailBuyNow');
+      const target = event.target.closest('#detailFavorite, .favorite-btn, #detailAddCart, .add-cart-btn, #detailBuyNow, .buy-now-btn');
       const checkout = event.target.closest('.cart-checkout, [data-confirm-order]');
       if (!target && !checkout) return;
       if (!currentUser) {
@@ -127,7 +146,7 @@
           (target || checkout).click();
           return;
         }
-        const intent = checkout ? 'checkout' : target?.id === 'detailBuyNow' ? 'buy-now'
+        const intent = checkout ? 'checkout' : target?.matches('#detailBuyNow, .buy-now-btn') ? 'buy-now'
           : target?.id === 'detailFavorite' || target?.matches('.favorite-btn') ? 'favorite' : 'add-cart';
         const productName = target?.dataset.product || target?.dataset.favoriteProduct || target?.dataset.favorite
           || window.NEXUS_PRODUCTS?.[new URLSearchParams(window.location.search).get('id')]?.name || '';

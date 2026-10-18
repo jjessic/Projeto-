@@ -6,6 +6,7 @@ const descricaoResult = document.getElementById('descricaoResult');
 const tipsList = document.getElementById('tipsList');
 const cartCount = document.getElementById('cartCount');
 const addCartButtons = document.querySelectorAll('.add-cart-btn');
+const buyNowButtons = document.querySelectorAll('.buy-now-btn');
 const cartToggle = document.getElementById('cartToggle');
 const cartPanel = document.getElementById('cartPanel');
 const closeCartBtn = document.getElementById('closeCartBtn');
@@ -42,10 +43,18 @@ let cartItems = 0;
 let cartProducts = JSON.parse(localStorage.getItem('nexus-cart') || '[]');
 let selectedPaymentMethod = 'pix';
 const AUTO_DISCOUNT_PERCENT = 0.10;
+const FREE_SHIPPING_THRESHOLD = 500;
 
 function getSelectedDeliveryOption() {
   const selectedId = document.getElementById('deliveryOption')?.value;
   return (window.NEXUS_DELIVERY_OPTIONS || []).find((option) => option.id === selectedId) || null;
+}
+
+function getDeliveryFee(subtotal) {
+  const delivery = getSelectedDeliveryOption();
+  if (!delivery) return 0;
+  if (delivery.requires_address && subtotal >= FREE_SHIPPING_THRESHOLD) return 0;
+  return Number(delivery.fee || 0);
 }
 
 function setTheme(theme) {
@@ -101,8 +110,10 @@ productCards.forEach((card) => {
   const productId = card.dataset.productId;
   const product = window.NEXUS_PRODUCTS?.[productId];
   if (!product) return;
-  const detailUrl = `produto.html?id=${encodeURIComponent(productId)}`;
+  const detailUrl = `${encodeURIComponent(productId)}.html`;
   const image = card.querySelector('.product-image img');
+  image.src = product.images[0];
+  image.alt = product.name;
   const imageLink = document.createElement('a');
   imageLink.className = 'product-detail-link';
   imageLink.href = detailUrl;
@@ -116,6 +127,21 @@ productCards.forEach((card) => {
   titleLink.href = detailUrl;
   titleLink.textContent = product.name;
   title.replaceChildren(titleLink);
+  card.querySelector('.product-topline span').textContent = product.category;
+  card.querySelector('.product-topline strong').textContent = formatCurrency(product.price);
+  const description = card.querySelector('.product-body p');
+  if (description) description.textContent = product.description;
+  const favoriteButton = card.querySelector('.favorite-btn');
+  favoriteButton.dataset.favoriteProduct = product.name;
+  favoriteButton.setAttribute('aria-label', `Favoritar ${product.name}`);
+  const addButton = card.querySelector('.add-cart-btn');
+  addButton.dataset.product = product.name;
+  addButton.dataset.price = String(product.price);
+  card.querySelector('.buy-now-btn').dataset.product = product.name;
+  card.addEventListener('click', (event) => {
+    if (event.target.closest('a, button, input, select, textarea')) return;
+    window.location.href = detailUrl;
+  });
 });
 const productNames = productCards.map((card) => ({
   name: card.querySelector('h4')?.textContent.trim() || '',
@@ -372,8 +398,6 @@ if (productViewer && rotateShirtBtn) {
 const assistantWidget = document.getElementById('assistantWidget');
 const assistantToggle = document.getElementById('assistantToggle');
 const closeAssistant = document.getElementById('closeAssistant');
-const minimizeAssistant = document.getElementById('minimizeAssistant');
-const maximizeAssistant = document.getElementById('maximizeAssistant');
 const assistantResponse = document.getElementById('assistantResponse');
 const assistantSelectedQuestion = document.getElementById('assistantSelectedQuestion');
 const assistantQuickReplies = document.getElementById('assistantQuickReplies');
@@ -388,12 +412,12 @@ const assistantFaqs = {
   delivery: {
     followups: [
       { label: 'Quero saber o prazo para o meu CEP', answer: 'O prazo varia conforme o CEP e a transportadora. Como a loja não calcula essa previsão automaticamente, envie seu CEP pelo WhatsApp ou e-mail antes de concluir a compra. A equipe confirmará a estimativa em dias úteis para sua região.' },
-      { label: 'Quando o frete é grátis?', answer: 'O frete é grátis a partir de R$ 300 em compras. Em pedidos abaixo desse valor, o frete custa R$ 24,90.' }
+      { label: 'Quando o frete é grátis?', answer: 'O frete é grátis para entregas com endereço a partir de R$ 500 em produtos. Abaixo desse valor, o custo depende da modalidade de entrega escolhida.' }
     ]
   },
   payments: {
     followups: [
-      { label: 'Quais formas de pagamento são aceitas?', answer: 'A loja aceita PIX, cartão de crédito e boleto bancário. O PIX recebe 10% de desconto, o cartão pode ser parcelado em até 12 vezes e o boleto é pago à vista. Selecione a forma desejada no carrinho antes de finalizar.' },
+      { label: 'Quais formas de pagamento são aceitas?', answer: 'A loja aceita PIX, cartão de crédito, boleto bancário e PayPal. O PIX recebe 10% de desconto, o cartão pode ser parcelado em até 12 vezes e o boleto é pago à vista. Selecione a forma desejada no carrinho antes de finalizar.' },
       { label: 'Como funciona o desconto no PIX?', answer: 'Ao selecionar PIX, o carrinho aplica 10% de desconto sobre o valor dos produtos. O total atualizado aparece no resumo antes de finalizar o pedido.' },
       { label: 'Como consulto as parcelas do cartão?', answer: 'No carrinho, selecione Cartão e escolha o número de parcelas. O sistema apresenta o valor de cada parcela, com opções de até 12 vezes.' }
     ]
@@ -528,7 +552,7 @@ function updateInstallmentOptions() {
   
   const subtotal = getSubtotal();
   const discount = selectedPaymentMethod === 'pix' ? subtotal * AUTO_DISCOUNT_PERCENT : 0;
-  const delivery = Number(getSelectedDeliveryOption()?.fee || 0);
+  const delivery = getDeliveryFee(subtotal);
   const finalTotal = subtotal - discount + delivery;
 
   const options = installmentSelect.querySelectorAll('option');
@@ -557,7 +581,7 @@ function renderCart() {
 
   const subtotal = getSubtotal();
   const discount = selectedPaymentMethod === 'pix' ? subtotal * AUTO_DISCOUNT_PERCENT : 0;
-  const delivery = Number(getSelectedDeliveryOption()?.fee || 0);
+  const delivery = getDeliveryFee(subtotal);
   const finalTotal = subtotal - discount + delivery;
 
   cartList.innerHTML = cartProducts.map((item) => `
@@ -580,7 +604,9 @@ function renderCart() {
 
   cartTotal.textContent = formatCurrency(subtotal);
   cartDiscount.textContent = `-${formatCurrency(discount)}`;
-  cartDelivery.textContent = formatCurrency(delivery);
+  cartDelivery.textContent = delivery === 0 && getSelectedDeliveryOption()?.requires_address && subtotal >= FREE_SHIPPING_THRESHOLD
+    ? 'Grátis'
+    : formatCurrency(delivery);
   cartFinalTotal.textContent = formatCurrency(finalTotal);
   updateInstallmentOptions();
 }
@@ -606,34 +632,27 @@ function closeAssistantPanel() {
   assistantToggle.style.display = 'block';
 }
 
-function toggleMinimize() {
-  assistantWidget.classList.toggle('minimized');
-  assistantWidget.classList.remove('maximized');
-}
-
-function toggleMaximize() {
-  assistantWidget.classList.toggle('maximized');
-  assistantWidget.classList.remove('minimized');
-}
-
 assistantToggle.addEventListener('click', openAssistant);
 closeAssistant.addEventListener('click', closeAssistantPanel);
-minimizeAssistant.addEventListener('click', toggleMinimize);
-maximizeAssistant.addEventListener('click', toggleMaximize);
+
+function addProductToCart(button) {
+  const productName = button.dataset.product || 'Produto';
+  const productId = button.closest('.product-card')?.dataset.productId;
+  const selectedSize = window.NEXUS_PRODUCTS?.[productId]?.sizes?.[0] || 'M';
+  const price = Number(button.dataset.price || 0);
+  cartProducts.push({ id: `${productName}-${selectedSize}-${Date.now()}`, name: productName, size: selectedSize, price });
+  updateCartCount();
+  cartPanel?.classList.add('open');
+}
 
 addCartButtons.forEach((button) => {
+  button.addEventListener('click', () => addProductToCart(button));
+});
+
+buyNowButtons.forEach((button) => {
   button.addEventListener('click', () => {
-    cartItems += 1;
-    const productName = button.dataset.product || 'Produto';
-    const productId = button.closest('.product-card')?.dataset.productId;
-    const selectedSize = window.NEXUS_PRODUCTS?.[productId]?.sizes?.[0] || 'M';
-    const price = Number(button.dataset.price || 0);
-    cartProducts.push({ id: `${productName}-${selectedSize}-${Date.now()}`, name: productName, size: selectedSize, price });
-    cartItems = cartProducts.length;
-    updateCartCount();
-    if (cartPanel) {
-      cartPanel.classList.add('open');
-    }
+    const addButton = button.closest('.product-card')?.querySelector('.add-cart-btn');
+    if (addButton) addProductToCart(addButton);
   });
 });
 
@@ -722,31 +741,13 @@ if (new URLSearchParams(window.location.search).has('abrir-carrinho')) {
   window.history.replaceState({}, document.title, `${window.location.pathname}${window.location.hash}`);
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const widget = document.getElementById('assistantWidget');
-  const toggle = document.getElementById('assistantToggle');
-  const closeBtn = document.getElementById('closeAssistant');
-  
-  widget.classList.add('closed');
-
-  toggle.onclick = () => widget.classList.remove('closed');
-  closeBtn.onclick = () => widget.classList.add('closed');
-  
-  document.getElementById('minimizeAssistant').onclick = () => {
-    widget.classList.toggle('minimized');
-  };
-  document.getElementById('maximizeAssistant').onclick = () => {
-    widget.classList.toggle('maximized');
-  };
-});
 // Ação para o botão Meu Espaço
 const exclusiveTab = document.querySelector('.exclusive-tab');
 
 if (exclusiveTab) {
   exclusiveTab.addEventListener('click', () => {
-    // Insira aqui o que deseja que aconteça ao clicar
-    alert('Bem-vindo ao seu Espaço VIP!');
-    
+    // Scroll smoothly to the drop.
+
 // Roda suavemente até o próximo drop ao clicar em Meu Espaço
 (() => {
   const exclusiveTabLink = document.querySelector('.exclusive-tab');
@@ -766,4 +767,5 @@ if (exclusiveTab) {
     });
   }
 })(); 
-'}'
+  });
+}

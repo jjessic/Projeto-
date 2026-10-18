@@ -14,6 +14,7 @@ const categoryProducts = document.getElementById('categoryProducts');
 const categoryEmpty = document.getElementById('categoryEmpty');
 const categoryTabs = document.getElementById('categoryTabs');
 const money = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+const productPageUrl = (productId) => `${encodeURIComponent(productId)}.html`;
 
 const tabs = [
   { slug: '', label: 'Todas' },
@@ -32,14 +33,13 @@ categoryEmpty.hidden = matchingProducts.length > 0;
 categoryProducts.innerHTML = matchingProducts.map((product) => `
   <article class="product-card category-product-card">
     <div class="product-image">
-      <a class="category-product-image" href="produto.html?id=${encodeURIComponent(product.id)}" aria-label="Ver ${product.name}"><img src="${product.images[0]}" alt="${product.name}" /></a>
+      <a class="category-product-image" href="${productPageUrl(product.id)}" aria-label="Ver ${product.name}"><img src="${product.images[0]}" alt="${product.name}" /></a>
       <button type="button" class="favorite-btn category-favorite" data-favorite="${product.name}" aria-label="Favoritar ${product.name}" aria-pressed="false">♡</button>
     </div>
     <div class="product-body">
       <div class="product-topline"><span>${product.category}</span><strong>${money.format(product.price)}</strong></div>
-      <h2><a href="produto.html?id=${encodeURIComponent(product.id)}">${product.name}</a></h2>
-      <p>${product.description}</p>
-      <a class="category-view-product" href="produto.html?id=${encodeURIComponent(product.id)}">Ver detalhes</a>
+      <h2><a href="${productPageUrl(product.id)}">${product.name}</a></h2>
+      <a class="category-view-product" href="${productPageUrl(product.id)}">Ver detalhes</a>
     </div>
   </article>
 `).join('');

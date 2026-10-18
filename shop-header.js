@@ -52,6 +52,11 @@ function renderCart() {
   const cart = readStore('nexus-cart');
   const list = document.getElementById('shopCartList');
   const footer = document.getElementById('shopCartFooter');
+  const checkoutFieldIds = ['shopName', 'shopPhone', 'shopDeliveryOption', 'shopStreet', 'shopNumber', 'shopCEP', 'shopComplement', 'shopPaymentMethod'];
+  const previousCheckoutValues = Object.fromEntries(checkoutFieldIds.map((id) => [
+    id,
+    document.getElementById(id)?.value || ''
+  ]));
   if (!cart.length) {
     list.innerHTML = '<p class="shop-drawer-empty">Seu carrinho está vazio.</p>';
     footer.innerHTML = '<button type="button" class="shop-continue-button">Continuar comprando</button>';
@@ -69,6 +74,9 @@ function renderCart() {
     <div><span id="shopDeliverySummary">Entrega</span><strong id="shopDeliveryFee">Selecione</strong></div>
     <div class="shop-total"><span>Total</span><strong id="shopCartTotal">${currency.format(subtotal)}</strong></div>
     <div class="shop-checkout-fields">
+      <strong class="shop-checkout-section-title">Contato e entrega</strong>
+      <label>Nome completo<input id="shopName" autocomplete="name" /></label>
+      <label>Telefone<input id="shopPhone" type="tel" autocomplete="tel" placeholder="(00) 00000-0000" /></label>
       <label>Modalidade de entrega<select id="shopDeliveryOption"><option value="">Carregando opções...</option></select></label>
       <p class="shop-delivery-status" id="shopDeliveryStatus" role="status"></p>
       <div class="shop-address-fields" id="shopAddressFields">
@@ -76,23 +84,27 @@ function renderCart() {
         <div class="shop-address-row"><label>Número<input id="shopNumber" /></label><label>CEP<input id="shopCEP" autocomplete="postal-code" /></label></div>
         <label>Complemento<input id="shopComplement" /></label>
       </div>
-      <label>Nome para o pedido<input id="shopName" autocomplete="name" /></label>
-      <label>Telefone<input id="shopPhone" autocomplete="tel" /></label>
-      <label>Pagamento<select id="shopPaymentMethod"><option value="pix">PIX · 10% de desconto</option><option value="cartao">Cartão</option><option value="boleto">Boleto</option></select></label>
-      <p class="shop-order-note">O pedido ficará aguardando a confirmação do pagamento. O site não processa pagamentos nesta etapa.</p>
+      <strong class="shop-checkout-section-title">Forma de pagamento</strong>
+      <label>Pagamento<select id="shopPaymentMethod"><option value="pix">PIX · 10% de desconto</option><option value="cartao">Cartão</option><option value="boleto">Boleto</option><option value="paypal">PayPal</option></select></label>
+      <p class="shop-order-note">Frete grátis para entregas a partir de R$ 500 em produtos. O pedido ficará aguardando confirmação; o site não processa pagamentos nesta etapa.</p>
       <p class="shop-order-status" id="shopOrderStatus" role="status" aria-live="polite"></p>
       <button type="button" class="shop-order-button" data-confirm-order>Registrar pedido</button>
     </div>
     <button type="button" class="shop-continue-button">Continuar comprando</button>`;
 
   const deliverySelect = document.getElementById('shopDeliveryOption');
+  for (const id of ['shopName', 'shopPhone', 'shopStreet', 'shopNumber', 'shopCEP', 'shopComplement', 'shopPaymentMethod']) {
+    document.getElementById(id).value = previousCheckoutValues[id];
+  }
   const updateTotals = () => {
     const selected = (window.NEXUS_DELIVERY_OPTIONS || []).find((option) => option.id === deliverySelect.value);
-    const fee = Number(selected?.fee || 0);
+    const freeShippingThreshold = 500;
+    const hasFreeShipping = Boolean(selected?.requires_address && subtotal >= freeShippingThreshold);
+    const fee = hasFreeShipping ? 0 : Number(selected?.fee || 0);
     const pix = document.getElementById('shopPaymentMethod').value === 'pix';
     const discount = pix ? subtotal * 0.1 : 0;
     document.getElementById('shopCartDiscount').textContent = `−${currency.format(discount)}`;
-    document.getElementById('shopDeliveryFee').textContent = selected ? currency.format(fee) : 'Selecione';
+    document.getElementById('shopDeliveryFee').textContent = selected ? hasFreeShipping ? 'Grátis' : currency.format(fee) : 'Selecione';
     document.getElementById('shopDeliverySummary').textContent = selected ? `${selected.name} · ${selected.estimate}` : 'Entrega';
     document.getElementById('shopCartTotal').textContent = currency.format(subtotal - discount + fee);
     document.getElementById('shopAddressFields').hidden = !selected?.requires_address;
@@ -100,9 +112,13 @@ function renderCart() {
   deliverySelect.addEventListener('change', updateTotals);
   document.getElementById('shopPaymentMethod').addEventListener('change', updateTotals);
   window.NexusStoreAccount?.ready.then(() => {
+    if (!deliverySelect.isConnected) return;
     const options = window.NEXUS_DELIVERY_OPTIONS || [];
     deliverySelect.innerHTML = options.map((option) =>
       `<option value="${escapeShopText(option.id)}">${escapeShopText(option.name)} · ${currency.format(option.fee)} · ${escapeShopText(option.estimate)}</option>`).join('');
+    if (options.some((option) => option.id === previousCheckoutValues.shopDeliveryOption)) {
+      deliverySelect.value = previousCheckoutValues.shopDeliveryOption;
+    }
     deliverySelect.disabled = options.length === 0;
     if (!options.length) document.getElementById('shopDeliveryStatus').textContent = 'Configure a conexão com o banco para carregar as modalidades.';
     updateTotals();
@@ -114,7 +130,7 @@ function renderFavorites() {
   const savedProducts = shopProducts.filter((product) => favorites.includes(product.name));
   const list = document.getElementById('shopFavoritesList');
   list.innerHTML = savedProducts.length
-    ? savedProducts.map((product) => `<a class="shop-favorite-item" href="produto.html?id=${encodeURIComponent(product.id)}"><img src="${product.images[0]}" alt="" /><span><strong>${product.name}</strong><small>${currency.format(product.price)}</small></span><span aria-hidden="true">›</span></a>`).join('')
+    ? savedProducts.map((product) => `<a class="shop-favorite-item" href="${encodeURIComponent(product.id)}.html"><img src="${product.images[0]}" alt="" /><span><strong>${product.name}</strong><small>${currency.format(product.price)}</small></span><span aria-hidden="true">›</span></a>`).join('')
     : '<p class="shop-drawer-empty">Você ainda não favoritou nenhuma peça.</p>';
 }
 

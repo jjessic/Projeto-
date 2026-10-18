@@ -9,12 +9,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="style.css?v=9" />
-    <link rel="stylesheet" href="account.css?v=1" />
+    <link rel="stylesheet" href="account.css?v=2" />
   </head>
   <body class="account-page">
     <header class="account-topbar">
       <a class="account-brand" href="index.html" aria-label="Nexus Store, início"><span class="brand-mark">N</span><strong>NEXUS</strong></a>
-      <a class="account-back-link" href="index.html#colecao">Voltar para a loja</a>
+      <div class="account-header-actions">
+        <button type="button" class="theme-toggle account-theme-toggle" id="themeToggle" aria-label="Ativar tema escuro">☾</button>
+        <a class="account-back-link" href="index.html#colecao">Voltar para a loja</a>
+      </div>
     </header>
 
     <main class="account-main">
@@ -88,6 +91,6 @@
     <footer class="account-footer"><a href="index.html">NEXUS</a><span>Vista sua presença.</span></footer>
     <script src="store-config.js?v=1"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="account.js?v=1"></script>
+    <script src="account.js?v=2"></script>
   </body>
 </html>

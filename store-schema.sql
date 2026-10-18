@@ -59,9 +59,12 @@ create table if not exists public.store_orders (
   delivery_number text,
   delivery_complement text,
   delivery_cep text,
-  payment_method text not null check (payment_method in ('pix', 'cartao', 'boleto')),
+  payment_method text not null check (payment_method in ('pix', 'cartao', 'boleto', 'paypal')),
   created_at timestamptz not null default now()
 );
+alter table public.store_orders drop constraint if exists store_orders_payment_method_check;
+alter table public.store_orders add constraint store_orders_payment_method_check
+  check (payment_method in ('pix', 'cartao', 'boleto', 'paypal'));
 
 create table if not exists public.store_order_items (
   id bigint generated always as identity primary key,
@@ -123,12 +126,13 @@ declare
   v_size text;
   v_subtotal numeric(10,2) := 0;
   v_discount numeric(10,2) := 0;
+  v_delivery_fee numeric(10,2) := 0;
   v_order_id uuid := gen_random_uuid();
 begin
   if v_user_id is null then raise exception 'É necessário entrar na conta para comprar.'; end if;
   if p_items is null or jsonb_typeof(p_items) is distinct from 'array' then raise exception 'Formato de carrinho inválido.'; end if;
   if jsonb_array_length(p_items) = 0 then raise exception 'O carrinho está vazio.'; end if;
-  if p_payment_method is null or p_payment_method not in ('pix', 'cartao', 'boleto') then raise exception 'Forma de pagamento inválida.'; end if;
+  if p_payment_method is null or p_payment_method not in ('pix', 'cartao', 'boleto', 'paypal') then raise exception 'Forma de pagamento inválida.'; end if;
 
   select * into v_delivery from public.delivery_options where id = p_delivery_option_id and active;
   if not found then raise exception 'A modalidade de entrega selecionada não está disponível.'; end if;
@@ -148,9 +152,13 @@ begin
   end loop;
 
   if p_payment_method = 'pix' then v_discount := round(v_subtotal * 0.10, 2); end if;
+  v_delivery_fee := case
+    when v_delivery.requires_address and v_subtotal >= 500 then 0
+    else v_delivery.fee
+  end;
   insert into public.store_orders (id, user_id, subtotal, discount, delivery_fee, total, delivery_option_id,
     delivery_name, delivery_phone, delivery_street, delivery_number, delivery_complement, delivery_cep, payment_method)
-  values (v_order_id, v_user_id, v_subtotal, v_discount, v_delivery.fee, v_subtotal - v_discount + v_delivery.fee,
+  values (v_order_id, v_user_id, v_subtotal, v_discount, v_delivery_fee, v_subtotal - v_discount + v_delivery_fee,
     v_delivery.id, trim(p_customer_name), nullif(trim(p_customer_phone), ''), nullif(trim(p_street), ''),
     nullif(trim(p_number), ''), nullif(trim(p_complement), ''), nullif(trim(p_cep), ''), p_payment_method);
 
